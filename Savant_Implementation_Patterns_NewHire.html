@@ -221,9 +221,41 @@
     .main { padding: 1rem; }
     .pattern-grid { grid-template-columns: 1fr; }
   }
+
+  /* TOP NAV */
+  .topnav {
+    background: #0f172a;
+    padding: 0.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .topnav-brand {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #e2e8f0;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .topnav-brand span { color: #3b82f6; }
+  .topnav-back {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    transition: color 0.15s;
+  }
+  .topnav-back:hover { color: #e2e8f0; }
+
 </style>
 </head>
 <body>
+<div class="topnav">
+  <div class="topnav-brand"><span>Savant</span> Software</div>
+  <a href="index.html" class="topnav-back">← Resource Library</a>
+</div>
 
 <div class="cover">
   <div class="cover-label">New Hire Training Resource</div>
