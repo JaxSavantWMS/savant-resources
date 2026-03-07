@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Savant WMS — Resource Library</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --dark: #111827;
+    --surface: #1f2937;
+    --surface-light: #374151;
+    --border: #4b5563;
+    --accent: #3b82f6;
+    --accent-glow: rgba(59,130,246,0.15);
+    --green: #10b981;
+    --amber: #f59e0b;
+    --purple: #8b5cf6;
+    --text: #f9fafb;
+    --text-dim: #9ca3af;
+    --text-muted: #6b7280;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .header {
+    text-align: center;
+    padding: 3.5rem 2rem 2rem;
+    position: relative;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .logo-text {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    position: relative;
+    z-index: 1;
+  }
+  .header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem;
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+    position: relative;
+    z-index: 1;
+  }
+  .header-sub {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    max-width: 480px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .grid {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 1rem 2rem 3rem;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-decoration: none;
+    color: var(--text);
+    display: block;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3), 0 0 0 1px var(--accent);
+  }
+  .card-category {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 0.6rem;
+  }
+  .cat-sales { background: rgba(59,130,246,0.15); color: #60a5fa; }
+  .cat-internal { background: rgba(16,185,129,0.15); color: #34d399; }
+  .cat-training { background: rgba(245,158,11,0.15); color: #fbbf24; }
+
+  .card h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+    line-height: 1.3;
+  }
+  .card p {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    line-height: 1.55;
+  }
+  .card-arrow {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    transition: all 0.2s;
+  }
+  .card:hover .card-arrow {
+    color: var(--accent);
+    transform: translateX(3px);
+  }
+
+  .divider {
+    max-width: 820px;
+    margin: 0.5rem auto;
+    padding: 0 2rem;
+  }
+  .divider-line {
+    border: none;
+    border-top: 1px solid var(--border);
+  }
+  .divider-label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 0.75rem;
+    margin-bottom: -0.25rem;
+    padding: 0 2rem;
+    max-width: 820px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+  }
+
+  .empty-state {
+    background: var(--surface);
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+  }
+
+  @media (max-width: 640px) {
+    .header h1 { font-size: 1.6rem; }
+    .grid { padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo-text">Savant Software</div>
+  <h1>Resource Library</h1>
+  <div class="header-sub">Bookmarkable references for sales, implementation, and training. Updated from Claude artifacts — always current.</div>
+</div>
+
+<div class="divider-label">Pre-Sales &amp; Demo Resources</div>
+<div class="grid">
+  <a href="Savant_Sample_Blueprint_PreSales.html" class="card">
+    <span class="card-category cat-sales">Pre-Sales</span>
+    <span class="card-arrow">→</span>
+    <h2>Sample Implementation Blueprint</h2>
+    <p>Anonymized multi-site manufacturing blueprint. Show prospects what a Savant Professional blueprint looks like — modules, site structure, receiving, production, fulfillment. "Summit Manufacturing Co." replaces all client data.</p>
+  </a>
+</div>
+
+<div class="divider-label">Customer References (Internal Only)</div>
+<div class="grid">
+  <a href="Crusoe_Quick_Reference.html" class="card">
+    <span class="card-category cat-internal">Internal</span>
+    <span class="card-arrow">→</span>
+    <h2>Crusoe WMS — Quick Reference</h2>
+    <p>Searchable, collapsible reference for the Crusoe implementation. Every decision tagged: Decided, Cancelled, Phase 2, Addendum, Standard. Search by keyword to find any decision instantly. Blueprint v2.2.</p>
+  </a>
+
+  <!-- Add more customer references here as you build them -->
+  <!--
+  <a href="Clipper_Quick_Reference.html" class="card">
+    <span class="card-category cat-internal">Internal</span>
+    <span class="card-arrow">→</span>
+    <h2>Clipper Distributing — Deal Reference</h2>
+    <p>Contract terms, SLA thresholds, EDI requirements, key contacts, open items.</p>
+  </a>
+  -->
+</div>
+
+<div class="divider-label">Training &amp; Enablement</div>
+<div class="grid">
+  <a href="Savant_Implementation_Patterns_NewHire.html" class="card">
+    <span class="card-category cat-training">Training</span>
+    <span class="card-arrow">→</span>
+    <h2>WMS Implementation Patterns Guide</h2>
+    <p>New hire training resource. Seven chapters covering phased rollouts, summary locations, inventory config, receiving, production, fulfillment, and blueprint anatomy. Uses Crusoe as the teaching case study.</p>
+  </a>
+
+  <!-- Add more training resources here -->
+  <!--
+  <a href="Fulfillment_Center_Patterns.html" class="card">
+    <span class="card-category cat-training">Training</span>
+    <span class="card-arrow">→</span>
+    <h2>3PL / Fulfillment Center Patterns</h2>
+    <p>Multi-tenant fulfillment, branded packing slips, freight billing logic.</p>
+  </a>
+  -->
+</div>
+
+<div class="footer">
+  Savant Software, Inc. — Internal Resource Library<br>
+  Bookmark this page. Share individual links with your team.
+</div>
+
+</body>
+</html>
