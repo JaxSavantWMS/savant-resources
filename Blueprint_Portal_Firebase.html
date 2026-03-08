@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crusoe × Savant WMS — Blueprint Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+
+<style>
+:root {
+  --white: #ffffff;
+  --cream: #fafbfc;
+  --warm: #f6f7f9;
+  --border: #e5e7eb;
+  --border-light: #f0f1f3;
+  --ink: #0f172a;
+  --ink-soft: #334155;
+  --ink-muted: #64748b;
+  --ink-faint: #94a3b8;
+  --savant-orange: #e8611a;
+  --savant-orange-light: #fff7ed;
+  --savant-orange-border: #fed7aa;
+  --blue: #2563eb;
+  --blue-light: #eff6ff;
+  --blue-border: #bfdbfe;
+  --green: #059669;
+  --green-light: #ecfdf5;
+  --green-border: #a7f3d0;
+  --amber: #d97706;
+  --amber-light: #fffbeb;
+  --amber-border: #fde68a;
+  --red: #dc2626;
+  --red-light: #fef2f2;
+  --red-border: #fecaca;
+  --purple: #7c3aed;
+  --purple-light: #f5f3ff;
+  --purple-border: #ddd6fe;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* LOGIN OVERLAY */
+.login-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15,23,42,0.85);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.login-overlay.hidden { display: none; }
+.login-box {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 2.5rem;
+  width: 380px;
+  max-width: 90vw;
+  text-align: center;
+  box-shadow: 0 24px 48px rgba(0,0,0,0.2);
+}
+.login-box h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.3rem; }
+.login-box p { font-size: 0.8rem; color: var(--ink-muted); margin-bottom: 1.25rem; }
+.login-input {
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.88rem;
+  margin-bottom: 0.5rem;
+  outline: none;
+}
+.login-input:focus { border-color: var(--savant-orange); box-shadow: 0 0 0 3px rgba(232,97,26,0.1); }
+.login-role {
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.88rem;
+  margin-bottom: 1rem;
+  outline: none;
+  background: var(--white);
+  appearance: auto;
+}
+.login-btn {
+  width: 100%;
+  padding: 0.7rem;
+  background: var(--savant-orange);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.login-btn:hover { background: #d4570f; }
+
+/* BRAND BAR */
+.brand-bar {
+  background: var(--ink);
+  padding: 0.5rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.brand-left { display: flex; align-items: center; gap: 0.75rem; }
+.brand-logo {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.brand-logo span { color: var(--savant-orange); }
+.brand-user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.72rem;
+  color: #94a3b8;
+}
+.user-dot {
+  width: 7px; height: 7px;
+  background: var(--green);
+  border-radius: 50%;
+}
+.online-count {
+  font-size: 0.62rem;
+  color: #64748b;
+  background: rgba(255,255,255,0.08);
+  padding: 0.15rem 0.5rem;
+  border-radius: 100px;
+}
+
+/* PROJECT HEADER */
+.project-hdr {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 1.5rem 2rem;
+}
+.project-hdr-inner { max-width: 960px; margin: 0 auto; }
+.project-tags { display: flex; gap: 0.4rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+.ptag {
+  font-size: 0.58rem; font-weight: 700; letter-spacing: 0.07em;
+  text-transform: uppercase; padding: 0.18rem 0.55rem; border-radius: 100px;
+  border: 1px solid transparent;
+}
+.ptag-active { background: var(--green-light); color: var(--green); border-color: var(--green-border); }
+.ptag-phase { background: var(--blue-light); color: var(--blue); border-color: var(--blue-border); }
+.ptag-version { background: var(--warm); color: var(--ink-muted); border-color: var(--border); }
+.project-hdr h1 {
+  font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2;
+}
+.project-hdr h1 span { color: var(--ink-muted); font-weight: 400; }
+.project-sub { font-size: 0.82rem; color: var(--ink-muted); margin-top: 0.2rem; }
+
+/* PROGRESS */
+.progress-strip {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 2rem;
+}
+.progress-inner { max-width: 960px; margin: 0 auto; }
+.progress-bar { height: 5px; background: var(--border); border-radius: 100px; overflow: hidden; }
+.progress-fill { height: 100%; width: 35%; background: linear-gradient(90deg, var(--savant-orange), #f59e0b); border-radius: 100px; }
+.milestones { display: flex; justify-content: space-between; margin-top: 0.5rem; }
+.ms { text-align: center; flex: 1; }
+.ms-dot { width: 8px; height: 8px; border-radius: 50%; margin: 0 auto 0.2rem; border: 2px solid var(--border); background: var(--white); }
+.ms.done .ms-dot { background: var(--green); border-color: var(--green); }
+.ms.now .ms-dot { background: var(--savant-orange); border-color: var(--savant-orange); box-shadow: 0 0 0 3px rgba(232,97,26,0.12); }
+.ms-label { font-size: 0.58rem; font-weight: 600; color: var(--ink-soft); }
+.ms-sub { font-size: 0.52rem; color: var(--ink-faint); }
+.ms.future .ms-label { color: var(--ink-faint); }
+
+/* TABS */
+.tabs {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  position: sticky; top: 0; z-index: 100;
+}
+.tabs-inner { max-width: 960px; margin: 0 auto; display: flex; gap: 0; overflow-x: auto; }
+.tab {
+  font-size: 0.75rem; font-weight: 500; color: var(--ink-muted);
+  padding: 0.65rem 0.85rem; cursor: pointer; border-bottom: 2px solid transparent;
+  transition: all 0.15s; white-space: nowrap; user-select: none;
+}
+.tab:hover { color: var(--ink-soft); }
+.tab.active { color: var(--savant-orange); border-bottom-color: var(--savant-orange); font-weight: 600; }
+.tab .tab-badge {
+  font-size: 0.55rem; font-weight: 700; background: var(--red-light); color: var(--red);
+  padding: 0.05rem 0.35rem; border-radius: 100px; margin-left: 0.3rem; vertical-align: middle;
+}
+
+/* MAIN */
+.main { max-width: 960px; margin: 0 auto; padding: 1rem 2rem 3rem; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* SECTION CARD */
+.sec {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 0.65rem;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+}
+.sec-head {
+  padding: 0.7rem 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+  cursor: pointer; transition: background 0.1s;
+}
+.sec-head:hover { background: var(--warm); }
+.sec-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem; font-weight: 500; color: var(--savant-orange);
+  background: var(--savant-orange-light); padding: 0.15rem 0.45rem;
+  border-radius: 4px; border: 1px solid var(--savant-orange-border);
+}
+.sec-title { font-size: 0.85rem; font-weight: 600; flex: 1; }
+.sec-stats { display: flex; gap: 0.3rem; }
+.sec-stat {
+  font-size: 0.55rem; font-weight: 600; padding: 0.1rem 0.4rem; border-radius: 100px;
+}
+.sec-toggle { color: var(--ink-faint); font-size: 0.6rem; transition: transform 0.2s; }
+.sec.open .sec-toggle { transform: rotate(180deg); }
+.sec-body { display: none; padding: 0 1rem 1rem; border-top: 1px solid var(--border-light); }
+.sec.open .sec-body { display: block; padding-top: 0.75rem; }
+
+/* DECISION ROW */
+.dec {
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+.dec:hover { border-color: var(--border); }
+.dec-main {
+  padding: 0.6rem 0.8rem;
+  display: flex; gap: 0.5rem; align-items: flex-start;
+}
+.dec-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.52rem; font-weight: 600; padding: 0.13rem 0.4rem;
+  border-radius: 4px; white-space: nowrap; flex-shrink: 0;
+  margin-top: 0.15rem; text-transform: uppercase; letter-spacing: 0.03em;
+  border: 1px solid transparent; cursor: default;
+}
+.dec-status.confirmed { background: var(--green-light); color: var(--green); border-color: var(--green-border); }
+.dec-status.standard { background: var(--blue-light); color: var(--blue); border-color: var(--blue-border); }
+.dec-status.future { background: var(--amber-light); color: var(--amber); border-color: var(--amber-border); }
+.dec-status.pending { background: var(--warm); color: var(--ink-muted); border-color: var(--border); }
+.dec-text { font-size: 0.8rem; color: var(--ink-soft); flex: 1; line-height: 1.5; }
+.dec-text strong { color: var(--ink); font-weight: 600; }
+.dec-actions {
+  display: flex; gap: 0.25rem; flex-shrink: 0; margin-top: 0.1rem;
+}
+.dec-btn {
+  font-size: 0.6rem; font-weight: 600; padding: 0.2rem 0.45rem;
+  border-radius: 4px; border: 1px solid var(--border); background: var(--white);
+  cursor: pointer; transition: all 0.15s; color: var(--ink-muted);
+}
+.dec-btn:hover { border-color: var(--ink-faint); color: var(--ink-soft); }
+.dec-btn.active-approve { background: var(--green-light); color: var(--green); border-color: var(--green-border); }
+.dec-btn.active-flag { background: var(--amber-light); color: var(--amber); border-color: var(--amber-border); }
+.dec-btn.active-discuss { background: var(--purple-light); color: var(--purple); border-color: var(--purple-border); }
+
+/* COMMENT THREAD */
+.dec-comments {
+  border-top: 1px solid var(--border-light);
+  padding: 0.5rem 0.8rem;
+  background: var(--cream);
+}
+.comment {
+  display: flex; gap: 0.5rem; margin-bottom: 0.4rem; align-items: flex-start;
+}
+.comment-avatar {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--savant-orange-light); color: var(--savant-orange);
+  font-size: 0.55rem; font-weight: 700; display: flex;
+  align-items: center; justify-content: center; flex-shrink: 0; margin-top: 0.1rem;
+}
+.comment-avatar.client { background: var(--blue-light); color: var(--blue); }
+.comment-body { flex: 1; }
+.comment-meta { font-size: 0.62rem; color: var(--ink-faint); margin-bottom: 0.1rem; }
+.comment-meta strong { color: var(--ink-soft); font-weight: 600; }
+.comment-text { font-size: 0.75rem; color: var(--ink-soft); }
+.comment-input-row { display: flex; gap: 0.3rem; margin-top: 0.4rem; }
+.comment-input {
+  flex: 1; padding: 0.4rem 0.6rem; border: 1px solid var(--border);
+  border-radius: 6px; font-family: 'Outfit', sans-serif; font-size: 0.75rem;
+  outline: none;
+}
+.comment-input:focus { border-color: var(--savant-orange); }
+.comment-send {
+  padding: 0.4rem 0.7rem; background: var(--savant-orange); color: white;
+  border: none; border-radius: 6px; font-family: 'Outfit', sans-serif;
+  font-size: 0.7rem; font-weight: 600; cursor: pointer;
+}
+
+/* FLOW */
+.flow { display: flex; align-items: center; gap: 0.25rem; margin: 0.4rem 0; flex-wrap: wrap; }
+.flow-s {
+  background: var(--warm); border: 1px solid var(--border);
+  padding: 0.25rem 0.5rem; border-radius: 5px;
+  font-size: 0.7rem; font-weight: 500; color: var(--ink);
+}
+.flow-a { color: var(--ink-faint); font-size: 0.65rem; }
+
+/* STATS */
+.stats-row {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem; margin-bottom: 1rem;
+}
+.stat-b {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 8px; padding: 0.7rem; text-align: center;
+}
+.stat-n { font-size: 1.2rem; font-weight: 800; color: var(--ink); }
+.stat-l { font-size: 0.58rem; color: var(--ink-faint); font-weight: 500; }
+
+/* ADDENDUM TABLE */
+.a-tbl { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+.a-tbl th {
+  text-align: left; font-size: 0.58rem; font-weight: 700; color: var(--ink-faint);
+  text-transform: uppercase; letter-spacing: 0.06em;
+  padding: 0.5rem 0.6rem; border-bottom: 2px solid var(--border);
+}
+.a-tbl td { padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--border-light); color: var(--ink-soft); }
+.a-id { font-family: 'JetBrains Mono', monospace; font-weight: 500; color: var(--savant-orange); }
+.sdot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 0.3rem; vertical-align: middle; }
+
+/* ACTIVITY LOG */
+.activity-item {
+  display: flex; gap: 0.6rem; padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border-light); font-size: 0.78rem;
+}
+.activity-item:last-child { border-bottom: none; }
+.activity-time { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--ink-faint); white-space: nowrap; flex-shrink: 0; width: 65px; }
+.activity-text { color: var(--ink-soft); }
+.activity-text strong { color: var(--ink); }
+
+/* FOOTER */
+.footer {
+  max-width: 960px; margin: 0 auto; padding: 1.5rem 2rem;
+  text-align: center; font-size: 0.62rem; color: var(--ink-faint);
+  border-top: 1px solid var(--border);
+}
+
+/* RESPONSIVE */
+@media (max-width: 640px) {
+  .project-hdr h1 { font-size: 1.2rem; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .main { padding: 0.75rem 0.75rem 2rem; }
+  .brand-bar { padding: 0.5rem 0.75rem; }
+  .milestones { flex-wrap: wrap; gap: 0.3rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN OVERLAY -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <h2>Blueprint Portal</h2>
+    <p>Crusoe × Savant WMS · Enter your name to continue</p>
+    <input type="text" class="login-input" id="loginName" placeholder="Your name" autofocus>
+    <select class="login-role" id="loginRole">
+      <option value="savant">Savant Software</option>
+      <option value="client">Crusoe</option>
+    </select>
+    <button class="login-btn" onclick="doLogin()">Enter Portal</button>
+  </div>
+</div>
+
+<!-- BRAND BAR -->
+<div class="brand-bar">
+  <div class="brand-left">
+    <div class="brand-logo"><span>Savant</span> Software</div>
+    <span class="online-count" id="onlineCount">—</span>
+  </div>
+  <div class="brand-user">
+    <span class="user-dot"></span>
+    <span id="userName">—</span>
+  </div>
+</div>
+
+<!-- PROJECT HEADER -->
+<div class="project-hdr">
+  <div class="project-hdr-inner">
+    <div class="project-tags">
+      <span class="ptag ptag-active">Active Project</span>
+      <span class="ptag ptag-phase">Phase 1 — Tulsa 2</span>
+      <span class="ptag ptag-version">Blueprint v2.2</span>
+    </div>
+    <h1>Crusoe <span>× Savant WMS</span></h1>
+    <div class="project-sub">Collaborative Implementation Blueprint · Savant Professional · Acumatica Cloud ERP 2024 R2</div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-strip">
+  <div class="progress-inner">
+    <div class="progress-bar"><div class="progress-fill"></div></div>
+    <div class="milestones">
+      <div class="ms done"><div class="ms-dot"></div><div class="ms-label">Discovery</div><div class="ms-sub">Complete</div></div>
+      <div class="ms done"><div class="ms-dot"></div><div class="ms-label">Blueprint</div><div class="ms-sub">Signed</div></div>
+      <div class="ms now"><div class="ms-dot"></div><div class="ms-label">Config</div><div class="ms-sub">Active</div></div>
+      <div class="ms future"><div class="ms-dot"></div><div class="ms-label">UAT</div><div class="ms-sub">—</div></div>
+      <div class="ms future"><div class="ms-dot"></div><div class="ms-label">Go-Live</div><div class="ms-sub">—</div></div>
+      <div class="ms future"><div class="ms-dot"></div><div class="ms-label">Hypercare</div><div class="ms-sub">—</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tabs-inner">
+    <div class="tab active" onclick="switchTab('blueprint')">Blueprint</div>
+    <div class="tab" onclick="switchTab('addendums')">Addendums</div>
+    <div class="tab" onclick="switchTab('activity')">Activity <span class="tab-badge" id="activityBadge" style="display:none">0</span></div>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- BLUEPRINT TAB -->
+<div class="tab-panel active" id="panel-blueprint">
+
+  <div class="stats-row">
+    <div class="stat-b"><div class="stat-n">9</div><div class="stat-l">Modules</div></div>
+    <div class="stat-b"><div class="stat-n">4</div><div class="stat-l">Sites</div></div>
+    <div class="stat-b"><div class="stat-n">6</div><div class="stat-l">Addendums</div></div>
+    <div class="stat-b"><div class="stat-n">10.4K</div><div class="stat-l">SKUs</div></div>
+  </div>
+
+  <!-- 1.0 SITES -->
+  <div class="sec open">
+    <div class="sec-head" onclick="this.closest('.sec').classList.toggle('open')">
+      <span class="sec-num">1.0</span>
+      <span class="sec-title">Site Administration</span>
+      <span class="sec-toggle">▼</span>
+    </div>
+    <div class="sec-body" id="sec-1">
+      <div class="dec" data-id="1-1">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>Pilot site: Tulsa 2 (TUL2)</strong> — Final assembly. Consumes transfers from TUL Main + ARV. Customer shipments. 6–10 outbound/week. Changed from Arvada in v2.2.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('1-1','approve')" title="Approve">✓</button>
+            <button class="dec-btn" onclick="setStatus('1-1','flag')" title="Flag">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('1-1')" title="Comment">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-1-1"></div>
+      </div>
+      <div class="dec" data-id="1-2">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>4 warehouses:</strong> ARV1 (Arvada), TUL Main (Tulsa 1 — metal fab), TUL2 (Tulsa 2 — pilot/final assembly), PONCH (Louisiana). Subsequent sites Phase 2+.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('1-2','approve')" title="Approve">✓</button>
+            <button class="dec-btn" onclick="setStatus('1-2','flag')" title="Flag">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('1-2')" title="Comment">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-1-2"></div>
+      </div>
+      <div class="dec" data-id="1-3">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>4 branches.</strong> Savant integration account requires full multi-branch access + Customizer permissions for inter-site transfers and cross-location transactions.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('1-3','approve')" title="Approve">✓</button>
+            <button class="dec-btn" onclick="setStatus('1-3','flag')" title="Flag">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('1-3')" title="Comment">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-1-3"></div>
+      </div>
+      <div class="dec" data-id="1-4">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>2 summary locations per site in Acumatica:</strong> WMS (sellable inventory) and QUARANTINE (non-sellable, awaiting inspection). Detailed bin-level locations in Savant.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('1-4','approve')" title="Approve">✓</button>
+            <button class="dec-btn" onclick="setStatus('1-4','flag')" title="Flag">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('1-4')" title="Comment">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-1-4"></div>
+      </div>
+      <div class="dec" data-id="1-5">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>Zones:</strong> Receiving, Cage, Fabrication, Paint, Electrical, Assembly, Staging, Review/Quarantine, QC Hold. Role-based security via Savant Mobile + Admin Console.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('1-5','approve')" title="Approve">✓</button>
+            <button class="dec-btn" onclick="setStatus('1-5','flag')" title="Flag">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('1-5')" title="Comment">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-1-5"></div>
+      </div>
+      <div class="dec" data-id="1-6">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>Arvada operations:</strong> South Shop (fabrication, kitting, paint, welding, mezzanine storage) + North Shop (modular buildings, electrical assembly). ~100 yards apart, single Acumatica warehouse ARV1.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('1-6','approve')" title="Approve">✓</button>
+            <button class="dec-btn" onclick="setStatus('1-6','flag')" title="Flag">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('1-6')" title="Comment">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-1-6"></div>
+      </div>
+      <div class="dec" data-id="1-7">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>Tulsa operations:</strong> TUL Main and TUL2 ~15 min apart, modeled as separate Acumatica warehouses. Inter-site via two-step transfers (ship → in-transit → receive). 97% flows ARV → TUL.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('1-7','approve')" title="Approve">✓</button>
+            <button class="dec-btn" onclick="setStatus('1-7','flag')" title="Flag">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('1-7')" title="Comment">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-1-7"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2.0 INVENTORY -->
+  <div class="sec open">
+    <div class="sec-head" onclick="this.closest('.sec').classList.toggle('open')">
+      <span class="sec-num">2.0</span>
+      <span class="sec-title">Core Inventory &amp; Configuration</span>
+      <span class="sec-toggle">▼</span>
+    </div>
+    <div class="sec-body" id="sec-2">
+      <div class="dec" data-id="2-1">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>Inventory profile:</strong> 366 Finished Goods, 9,302 Components, 763 Subassemblies. Sequential numeric IDs. MPN as Attribute (primary) + Cross Reference. Savant maps both.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('2-1','approve')">✓</button>
+            <button class="dec-btn" onclick="setStatus('2-1','flag')">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('2-1')">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-2-1"></div>
+      </div>
+      <div class="dec" data-id="2-2">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>No serial/lot tracking</strong> in Phase 1. Future phases may add serial for high-value items. No non-stock items. No substitutions.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('2-2','approve')">✓</button>
+            <button class="dec-btn" onclick="setStatus('2-2','flag')">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('2-2')">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-2-2"></div>
+      </div>
+      <div class="dec" data-id="2-3">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>UOM:</strong> Wire managed in feet only, no LP per spool. Sheet metal purchased by weight, consumed as pieces. Savant handles all conversions.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('2-3','approve')">✓</button>
+            <button class="dec-btn" onclick="setStatus('2-3','flag')">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('2-3')">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-2-3"></div>
+      </div>
+      <div class="dec" data-id="2-4">
+        <div class="dec-main">
+          <span class="dec-status standard">Standard</span>
+          <span class="dec-text"><strong>Putaway:</strong> Zone-level rules from item attributes, direct-to-home-location, location override available. <strong>Replenishment:</strong> Home locations + Min/Max for 2-bin sections.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('2-4','approve')">✓</button>
+            <button class="dec-btn" onclick="setStatus('2-4','flag')">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('2-4')">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-2-4"></div>
+      </div>
+      <div class="dec" data-id="2-5">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>Labeling:</strong> LP IDs (4×6) assigned per pallet at receiving. Standard Savant LP, SKU, product labels. Mods via change request. UPC unique per item, Acumatica as master.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('2-5','approve')">✓</button>
+            <button class="dec-btn" onclick="setStatus('2-5','flag')">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('2-5')">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-2-5"></div>
+      </div>
+      <div class="dec" data-id="2-6">
+        <div class="dec-main">
+          <span class="dec-status standard">Standard</span>
+          <span class="dec-text"><strong>Cycle counts:</strong> Class A (top 80% value) monthly, Class B–D annual. Non-directed entry in Savant → results pushed to Acumatica.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('2-6','approve')">✓</button>
+            <button class="dec-btn" onclick="setStatus('2-6','flag')">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('2-6')">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-2-6"></div>
+      </div>
+      <div class="dec" data-id="2-7">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>Adjustments:</strong> All originate in Savant → push to Acumatica. Flow: Operator → Quarantine → Supervisor adjustment → Savant creates Issue doc (Hold) → Accounting releases. Reason codes aligned.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('2-7','approve')">✓</button>
+            <button class="dec-btn" onclick="setStatus('2-7','flag')">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('2-7')">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-2-7"></div>
+      </div>
+      <div class="dec" data-id="2-8">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>Transfers:</strong> Sales Order Transfer model (Shipment → Receipt). Phase 1 mixed: TUL2 ships via Savant, ARV receives manually. Non-WMS→WMS per Addendum 006.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('2-8','approve')">✓</button>
+            <button class="dec-btn" onclick="setStatus('2-8','flag')">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('2-8')">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-2-8"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3.0 RECEIVING -->
+  <div class="sec">
+    <div class="sec-head" onclick="this.closest('.sec').classList.toggle('open')">
+      <span class="sec-num">3.0</span>
+      <span class="sec-title">Receiving</span>
+      <span class="sec-toggle">▼</span>
+    </div>
+    <div class="sec-body" id="sec-3">
+      <p style="font-size:0.72rem;font-weight:600;color:var(--ink);margin-bottom:0.3rem;">PO Receipt Flow</p>
+      <div class="flow">
+        <span class="flow-s">PO in Acumatica</span><span class="flow-a">→</span>
+        <span class="flow-s">Scan PO # (Savant Mobile)</span><span class="flow-a">→</span>
+        <span class="flow-s">Capture pallet by pallet</span><span class="flow-a">→</span>
+        <span class="flow-s">Push receipt to Acumatica</span>
+      </div>
+      <div class="dec" data-id="3-1">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>Receiving rules:</strong> Under-receiving allowed. Items not on PO rejected. Nonconforming items received for traceability. Attachments (heat #s, certs) stay in Acumatica.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('3-1','approve')">✓</button>
+            <button class="dec-btn" onclick="setStatus('3-1','flag')">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('3-1')">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-3-1"></div>
+      </div>
+      <div class="dec" data-id="3-2">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>QMS Integration:</strong> Savant auto-marks QMS Hold on QC items. Push notification from QMS (E-Workplace Apps) releases hold. Reason codes in Savant. <em>See Addendum 001.</em></span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('3-2','approve')">✓</button>
+            <button class="dec-btn" onclick="setStatus('3-2','flag')">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('3-2')">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-3-2"></div>
+      </div>
+      <div class="dec" data-id="3-3">
+        <div class="dec-main">
+          <span class="dec-status standard">Standard</span>
+          <span class="dec-text"><strong>Putaway:</strong> Directed (zone rules, home location, override) + Non-directed (Product Move for items, LP Move for kits/pallets/skids).</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('3-3','approve')">✓</button>
+            <button class="dec-btn" onclick="setStatus('3-3','flag')">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('3-3')">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-3-3"></div>
+      </div>
+      <div class="dec" data-id="3-4">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>Vendor returns:</strong> Move to Quarantine → Procurement/Quality notified → RMA in Acumatica → one-sided adjustment in Savant.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('3-4','approve')">✓</button>
+            <button class="dec-btn" onclick="setStatus('3-4','flag')">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('3-4')">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-3-4"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4.0 PRODUCTION -->
+  <div class="sec">
+    <div class="sec-head" onclick="this.closest('.sec').classList.toggle('open')">
+      <span class="sec-num">4.0</span>
+      <span class="sec-title">Production</span>
+      <span class="sec-toggle">▼</span>
+    </div>
+    <div class="sec-body" id="sec-4">
+      <div class="dec" data-id="4-1">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>MO flow:</strong> Originate in Acumatica → auto-flow to Savant with full BOM. Savant creates separate work-center-level MOs from each Acumatica MO. Fully barcode-driven, operation-based.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('4-1','approve')">✓</button>
+            <button class="dec-btn" onclick="setStatus('4-1','flag')">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('4-1')">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-4-1"></div>
+      </div>
+      <div class="dec" data-id="4-2">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>Pick by Work Center:</strong> Operation-based pick tickets. Each Work Center (Fab, Paint, Electrical) gets only its relevant materials. <em>See Addendum 002.</em></span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('4-2','approve')">✓</button>
+            <button class="dec-btn" onclick="setStatus('4-2','flag')">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('4-2')">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-4-2"></div>
+      </div>
+      <div class="dec" data-id="4-3">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>LP for picks:</strong> Pre-kit into carts/racks. LPs stay in inventory until consumed. Standard Savant issue functionality. <em>Backflushed materials: Addendum 003.</em></span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('4-3','approve')">✓</button>
+            <button class="dec-btn" onclick="setStatus('4-3','flag')">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('4-3')">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-4-3"></div>
+      </div>
+      <div class="dec" data-id="4-4">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>Outsourced production:</strong> Copper parts via Acumatica vendor shipment flow — scan materials sent, receive finished parts, link to MO. <em>See Addendum 004.</em></span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('4-4','approve')">✓</button>
+            <button class="dec-btn" onclick="setStatus('4-4','flag')">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('4-4')">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-4-4"></div>
+      </div>
+      <div class="dec" data-id="4-5">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>Inter-site transfers:</strong> Subassemblies between ARV ↔ TUL scanned, logged, tracked. <em>Production moves: Addendum 005. Transfers: Addendum 006.</em></span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('4-5','approve')">✓</button>
+            <button class="dec-btn" onclick="setStatus('4-5','flag')">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('4-5')">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-4-5"></div>
+      </div>
+      <div class="dec" data-id="4-6">
+        <div class="dec-main">
+          <span class="dec-status future">Phase 2</span>
+          <span class="dec-text"><strong>Labor tracking:</strong> Operators scan ID + Work Order + Operation on Savant kiosks. Post-Phase 1 evaluation with production operators.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('4-6','approve')">✓</button>
+            <button class="dec-btn" onclick="setStatus('4-6','flag')">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('4-6')">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-4-6"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5.0 FULFILLMENT -->
+  <div class="sec">
+    <div class="sec-head" onclick="this.closest('.sec').classList.toggle('open')">
+      <span class="sec-num">5.0</span>
+      <span class="sec-title">Order Fulfillment</span>
+      <span class="sec-toggle">▼</span>
+    </div>
+    <div class="sec-body" id="sec-5">
+      <p style="font-size:0.72rem;font-weight:600;color:var(--ink);margin-bottom:0.3rem;">Fulfillment Flow</p>
+      <div class="flow">
+        <span class="flow-s">SO + Shipment (Acumatica)</span><span class="flow-a">→</span>
+        <span class="flow-s">Manual release</span><span class="flow-a">→</span>
+        <span class="flow-s">Pick (paper 8.5×11)</span><span class="flow-a">→</span>
+        <span class="flow-s">Ship Confirm</span><span class="flow-a">→</span>
+        <span class="flow-s">Auto-update Acumatica</span>
+      </div>
+      <p style="font-size:0.68rem;color:var(--ink-faint);margin:0.3rem 0 0.5rem;">Volume: ARV 5–6/wk · TUL1 4 internal/wk · TUL2 6–10 outbound/wk (increasing)</p>
+      <div class="dec" data-id="5-1">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>8.5" × 11" paper pick tickets.</strong> Standard Savant assignment. Operators scan barcoded shipment # on Savant Mobile/Picking.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('5-1','approve')">✓</button>
+            <button class="dec-btn" onclick="setStatus('5-1','flag')">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('5-1')">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-5-1"></div>
+      </div>
+      <div class="dec" data-id="5-2">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>No QC/Packing module.</strong> Ship Confirm via Savant Mobile → auto-updates Acumatica. Standard Packing List available. Standard Savant labels/reports.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('5-2','approve')">✓</button>
+            <button class="dec-btn" onclick="setStatus('5-2','flag')">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('5-2')">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-5-2"></div>
+      </div>
+      <div class="dec" data-id="5-3">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>No customer returns process.</strong> Products are high-value, large-format equipment. Standard Savant Admin reporting.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('5-3','approve')">✓</button>
+            <button class="dec-btn" onclick="setStatus('5-3','flag')">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('5-3')">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-5-3"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ADDENDUMS TAB -->
+<div class="tab-panel" id="panel-addendums">
+  <table class="a-tbl">
+    <thead><tr><th>ID</th><th>Title</th><th>Type</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td class="a-id">001</td><td><strong>QMS Integration</strong><br><span style="font-size:0.68rem;color:var(--ink-faint)">Auto QMS Hold on receiving, push notification release</span></td><td>Customization</td><td><span class="sdot" style="background:var(--savant-orange)"></span>In Progress</td></tr>
+      <tr><td class="a-id">002</td><td><strong>Picking by Work Center</strong><br><span style="font-size:0.68rem;color:var(--ink-faint)">Operation-based pick tickets per work center</span></td><td>Extended Config</td><td><span class="sdot" style="background:var(--savant-orange)"></span>In Progress</td></tr>
+      <tr><td class="a-id">003</td><td><strong>Backflushed Materials</strong><br><span style="font-size:0.68rem;color:var(--ink-faint)">Handling spec for backflushed material issuance</span></td><td>Extended Config</td><td><span class="sdot" style="background:var(--border)"></span>Pending</td></tr>
+      <tr><td class="a-id">004</td><td><strong>Outside Process Vendor Shipment</strong><br><span style="font-size:0.68rem;color:var(--ink-faint)">Outsourced copper via Acumatica vendor shipment</span></td><td>Customization</td><td><span class="sdot" style="background:var(--border)"></span>Pending</td></tr>
+      <tr><td class="a-id">005</td><td><strong>Production Order Moves</strong><br><span style="font-size:0.68rem;color:var(--ink-faint)">Material movement between production zones</span></td><td>Extended Config</td><td><span class="sdot" style="background:var(--border)"></span>Pending</td></tr>
+      <tr><td class="a-id">006</td><td><strong>Inventory Transfers (Non-WMS ↔ WMS)</strong><br><span style="font-size:0.68rem;color:var(--ink-faint)">Phase 1 mixed environment transfer handling</span></td><td>Customization</td><td><span class="sdot" style="background:var(--green)"></span>Complete</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ACTIVITY TAB -->
+<div class="tab-panel" id="panel-activity">
+  <div id="activityLog">
+    <p style="font-size:0.8rem;color:var(--ink-faint);text-align:center;padding:2rem;">Activity will appear here as team members interact with the blueprint.</p>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<div class="footer">
+  Powered by Savant Software, Inc. · Collaborative Blueprint Portal<br>
+  All changes are saved in real-time. Bookmark this page for the latest status.
+</div>
+
+<script>
+// ============================================================
+// FIREBASE CONFIG - REPLACE WITH YOUR PROJECT CONFIG
+// ============================================================
+// To set up Firebase:
+// 1. Go to console.firebase.google.com
+// 2. Create a new project (name: crusoe-blueprint or similar)
+// 3. Add a web app
+// 4. Copy your config object here
+// 5. Enable Realtime Database (start in test mode)
+// 6. Deploy with: firebase deploy
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAOrLkTgSThOonMssCHghcvx1lg6ekgSoo",
+  authDomain: "crusoe-blueprint.firebaseapp.com",
+  databaseURL: "https://crusoe-blueprint-default-rtdb.firebaseio.com",
+  projectId: "crusoe-blueprint",
+  storageBucket: "crusoe-blueprint.firebasestorage.app",
+  messagingSenderId: "1002800563636",
+  appId: "1:1002800563636:web:1e53cb09f81f6346b91ee1"
+};
+
+// ============================================================
+// APP STATE
+// ============================================================
+let currentUser = null;
+let db = null;
+let isFirebaseReady = false;
+
+// Try to init Firebase
+try {
+  if (firebaseConfig.apiKey) {
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.database();
+    isFirebaseReady = true;
+  }
+} catch(e) {
+  console.log('Firebase not configured yet — running in demo mode');
+}
+
+// ============================================================
+// LOGIN
+// ============================================================
+function doLogin() {
+  const name = document.getElementById('loginName').value.trim();
+  const role = document.getElementById('loginRole').value;
+  if (!name) return;
+  
+  currentUser = { name, role, initials: name.split(' ').map(w=>w[0]).join('').toUpperCase() };
+  document.getElementById('userName').textContent = name + ' (' + (role === 'savant' ? 'Savant' : 'Crusoe') + ')';
+  document.getElementById('loginOverlay').classList.add('hidden');
+  
+  if (isFirebaseReady) {
+    const presRef = db.ref('presence/' + Date.now());
+    presRef.set({ name, role, online: true });
+    presRef.onDisconnect().remove();
+    
+    db.ref('presence').on('value', snap => {
+      const count = snap.numChildren();
+      document.getElementById('onlineCount').textContent = count + ' online';
+    });
+    
+    logActivity(name + ' joined the portal');
+    loadAllStatuses();
+    loadAllComments();
+    listenForActivity();
+  }
+}
+
+// Enter key on login
+document.getElementById('loginName').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+// ============================================================
+// TABS
+// ============================================================
+function switchTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  event.target.closest('.tab').classList.add('active');
+  document.getElementById('panel-' + id).classList.add('active');
+}
+
+// ============================================================
+// DECISION STATUS (Approve / Flag)
+// ============================================================
+function setStatus(decId, action) {
+  const dec = document.querySelector(`[data-id="${decId}"]`);
+  const btns = dec.querySelectorAll('.dec-btn');
+  
+  // Toggle
+  const btnIndex = action === 'approve' ? 0 : 1;
+  const activeClass = action === 'approve' ? 'active-approve' : 'active-flag';
+  const isActive = btns[btnIndex].classList.contains(activeClass);
+  
+  // Clear all
+  btns[0].classList.remove('active-approve');
+  btns[1].classList.remove('active-flag');
+  
+  if (!isActive) {
+    btns[btnIndex].classList.add(activeClass);
+  }
+  
+  const status = isActive ? 'none' : action;
+  
+  if (isFirebaseReady) {
+    db.ref('statuses/' + decId).set({
+      status,
+      user: currentUser.name,
+      role: currentUser.role,
+      timestamp: Date.now()
+    });
+    
+    const label = status === 'approve' ? 'approved' : status === 'flag' ? 'flagged' : 'cleared status on';
+    logActivity(currentUser.name + ' ' + label + ' decision ' + decId);
+  }
+}
+
+function loadAllStatuses() {
+  if (!isFirebaseReady) return;
+  db.ref('statuses').on('value', snap => {
+    const data = snap.val() || {};
+    Object.keys(data).forEach(decId => {
+      const dec = document.querySelector(`[data-id="${decId}"]`);
+      if (!dec) return;
+      const btns = dec.querySelectorAll('.dec-btn');
+      btns[0].classList.remove('active-approve');
+      btns[1].classList.remove('active-flag');
+      if (data[decId].status === 'approve') btns[0].classList.add('active-approve');
+      if (data[decId].status === 'flag') btns[1].classList.add('active-flag');
+    });
+  });
+}
+
+// ============================================================
+// COMMENTS
+// ============================================================
+function toggleComments(decId) {
+  const el = document.getElementById('comments-' + decId);
+  const isVisible = el.style.display !== 'none';
+  el.style.display = isVisible ? 'none' : 'block';
+  if (!isVisible) renderCommentInput(decId);
+}
+
+function renderCommentInput(decId) {
+  const el = document.getElementById('comments-' + decId);
+  if (el.querySelector('.comment-input-row')) return;
+  
+  const row = document.createElement('div');
+  row.className = 'comment-input-row';
+  row.innerHTML = `
+    <input type="text" class="comment-input" placeholder="Add a comment..." onkeydown="if(event.key==='Enter')addComment('${decId}',this)">
+    <button class="comment-send" onclick="addComment('${decId}',this.previousElementSibling)">Send</button>
+  `;
+  el.appendChild(row);
+}
+
+function addComment(decId, input) {
+  const text = input.value.trim();
+  if (!text || !currentUser) return;
+  
+  const comment = {
+    text,
+    user: currentUser.name,
+    role: currentUser.role,
+    initials: currentUser.initials,
+    timestamp: Date.now()
+  };
+  
+  if (isFirebaseReady) {
+    db.ref('comments/' + decId).push(comment);
+    logActivity(currentUser.name + ' commented on ' + decId + ': "' + text.substring(0,50) + '"');
+  } else {
+    renderComment(decId, comment);
+  }
+  
+  input.value = '';
+}
+
+function renderComment(decId, c) {
+  const el = document.getElementById('comments-' + decId);
+  const inputRow = el.querySelector('.comment-input-row');
+  
+  const div = document.createElement('div');
+  div.className = 'comment';
+  const time = new Date(c.timestamp).toLocaleString('en-US', {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
+  div.innerHTML = `
+    <div class="comment-avatar ${c.role === 'client' ? 'client' : ''}">${c.initials}</div>
+    <div class="comment-body">
+      <div class="comment-meta"><strong>${c.user}</strong> · ${time}</div>
+      <div class="comment-text">${c.text}</div>
+    </div>
+  `;
+  
+  if (inputRow) el.insertBefore(div, inputRow);
+  else el.appendChild(div);
+}
+
+function loadAllComments() {
+  if (!isFirebaseReady) return;
+  db.ref('comments').on('value', snap => {
+    const data = snap.val() || {};
+    // Clear existing comments (except inputs)
+    document.querySelectorAll('.dec-comments').forEach(el => {
+      el.querySelectorAll('.comment').forEach(c => c.remove());
+    });
+    
+    Object.keys(data).forEach(decId => {
+      const comments = data[decId];
+      Object.keys(comments).sort((a,b) => comments[a].timestamp - comments[b].timestamp).forEach(key => {
+        renderComment(decId, comments[key]);
+      });
+    });
+  });
+}
+
+// ============================================================
+// ACTIVITY LOG
+// ============================================================
+function logActivity(text) {
+  if (!isFirebaseReady) return;
+  db.ref('activity').push({
+    text,
+    timestamp: Date.now()
+  });
+}
+
+function listenForActivity() {
+  if (!isFirebaseReady) return;
+  db.ref('activity').orderByChild('timestamp').limitToLast(50).on('value', snap => {
+    const data = snap.val() || {};
+    const entries = Object.values(data).sort((a,b) => b.timestamp - a.timestamp);
+    
+    const log = document.getElementById('activityLog');
+    log.innerHTML = '';
+    
+    entries.forEach(entry => {
+      const time = new Date(entry.timestamp).toLocaleString('en-US', {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
+      const div = document.createElement('div');
+      div.className = 'activity-item';
+      div.innerHTML = `<span class="activity-time">${time}</span><span class="activity-text">${entry.text}</span>`;
+      log.appendChild(div);
+    });
+    
+    const badge = document.getElementById('activityBadge');
+    if (entries.length > 0) {
+      badge.style.display = 'inline';
+      badge.textContent = entries.length;
+    }
+  });
+}
+</script>
+
+</body>
+</html>
