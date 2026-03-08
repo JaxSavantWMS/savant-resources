@@ -378,12 +378,24 @@ body {
 </head>
 <body>
 
-<!-- LOGIN OVERLAY -->
-<div class="login-overlay" id="loginOverlay">
+<!-- PASSWORD GATE -->
+<div class="login-overlay" id="passwordGate">
   <div class="login-box">
+    <div style="font-size:0.6rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--savant-orange);margin-bottom:0.5rem;">Protected Access</div>
     <h2>Blueprint Portal</h2>
+    <p>Crusoe × Savant WMS · Enter the project password to continue</p>
+    <input type="password" class="login-input" id="passwordInput" placeholder="Password" autofocus onkeydown="if(event.key==='Enter')checkPassword()">
+    <div id="passwordError" style="font-size:0.72rem;color:var(--red);margin-bottom:0.5rem;display:none;">Incorrect password. Please try again.</div>
+    <button class="login-btn" onclick="checkPassword()">Continue</button>
+  </div>
+</div>
+
+<!-- LOGIN OVERLAY -->
+<div class="login-overlay hidden" id="loginOverlay">
+  <div class="login-box">
+    <h2>Welcome</h2>
     <p>Crusoe × Savant WMS · Enter your name to continue</p>
-    <input type="text" class="login-input" id="loginName" placeholder="Your name" autofocus>
+    <input type="text" class="login-input" id="loginName" placeholder="Your name">
     <select class="login-role" id="loginRole">
       <option value="savant">Savant Software</option>
       <option value="client">Crusoe</option>
@@ -1096,6 +1108,22 @@ try {
   }
 } catch(e) {
   console.log('Firebase not configured yet — running in demo mode');
+}
+
+// ============================================================
+// PASSWORD GATE
+// ============================================================
+function checkPassword() {
+  const pw = document.getElementById('passwordInput').value;
+  if (pw === 'Savantwms!') {
+    document.getElementById('passwordGate').classList.add('hidden');
+    document.getElementById('loginOverlay').classList.remove('hidden');
+    document.getElementById('loginName').focus();
+  } else {
+    document.getElementById('passwordError').style.display = 'block';
+    document.getElementById('passwordInput').value = '';
+    document.getElementById('passwordInput').focus();
+  }
 }
 
 // ============================================================
