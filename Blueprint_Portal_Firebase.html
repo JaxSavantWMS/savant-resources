@@ -437,7 +437,10 @@ body {
   <div class="tabs-inner">
     <div class="tab active" onclick="switchTab('blueprint')">Blueprint</div>
     <div class="tab" onclick="switchTab('addendums')">Addendums</div>
+    <div class="tab" onclick="switchTab('history')">Version History</div>
+    <div class="tab" onclick="switchTab('team')">Project Team</div>
     <div class="tab" onclick="switchTab('activity')">Activity <span class="tab-badge" id="activityBadge" style="display:none">0</span></div>
+    <div class="tab" style="margin-left:auto;color:var(--ink-faint);font-size:0.7rem;" onclick="window.print()">🖨 Print</div>
   </div>
 </div>
 
@@ -450,7 +453,7 @@ body {
     <div class="stat-b"><div class="stat-n">9</div><div class="stat-l">Modules</div></div>
     <div class="stat-b"><div class="stat-n">4</div><div class="stat-l">Sites</div></div>
     <div class="stat-b"><div class="stat-n">6</div><div class="stat-l">Addendums</div></div>
-    <div class="stat-b"><div class="stat-n">10.4K</div><div class="stat-l">SKUs</div></div>
+    <div class="stat-b"><div class="stat-n">10,431</div><div class="stat-l">SKUs</div></div>
   </div>
 
   <!-- 1.0 SITES -->
@@ -524,7 +527,7 @@ body {
       <div class="dec" data-id="1-6">
         <div class="dec-main">
           <span class="dec-status confirmed">Confirmed</span>
-          <span class="dec-text"><strong>Arvada operations:</strong> South Shop (fabrication, kitting, paint, welding, mezzanine storage) + North Shop (modular buildings, electrical assembly). ~100 yards apart, single Acumatica warehouse ARV1.</span>
+          <span class="dec-text"><strong>Arvada — South Shop (S Shop):</strong> Main fabrication and component preparation. Key areas: Metal fabrication &amp; welding booths · Paint area for component finishing · Barn area storing sheet metal and copper · Industrial wiring and kitting zones · Under Mezzanine (staging area for parts, PDCs, switchboard inventory, electrical parts — requires forklift access) · Upper Mezzanine (secondary storage for spare parts and overflow materials) · Final assembly and outbound dock for internal transfers.</span>
           <div class="dec-actions">
             <button class="dec-btn" onclick="setStatus('1-6','approve')" title="Approve">✓</button>
             <button class="dec-btn" onclick="setStatus('1-6','flag')" title="Flag">⚑</button>
@@ -533,10 +536,22 @@ body {
         </div>
         <div class="dec-comments" style="display:none" id="comments-1-6"></div>
       </div>
+      <div class="dec" data-id="1-6b">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>Arvada — North Shop (N Shop):</strong> Manufacturing modular buildings and final electrical assembly. Key areas: Dedicated welding and electrical build areas · Racked storage organized by location for receiving and staging · Drop-off/staging zone for items arriving from South Shop. Typical inbound: HVAC units, wire spools, kitted electrical components. Buildings ~100 yards apart, single Acumatica warehouse ARV1.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('1-6b','approve')" title="Approve">✓</button>
+            <button class="dec-btn" onclick="setStatus('1-6b','flag')" title="Flag">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('1-6b')" title="Comment">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-1-6b"></div>
+      </div>
       <div class="dec" data-id="1-7">
         <div class="dec-main">
           <span class="dec-status confirmed">Confirmed</span>
-          <span class="dec-text"><strong>Tulsa operations:</strong> TUL Main and TUL2 ~15 min apart, modeled as separate Acumatica warehouses. Inter-site via two-step transfers (ship → in-transit → receive). 97% flows ARV → TUL.</span>
+          <span class="dec-text"><strong>Tulsa operations:</strong> TUL Main and TUL2 ~15 min apart, modeled as separate Acumatica warehouses. TUL Main performs metal and copper fabrication. TUL2 handles final assembly including switchboards and top-level skid assemblies. Material flows TUL1 → TUL2. No customer shipments from TUL1. All final MOs and customer shipments completed at TUL2.</span>
           <div class="dec-actions">
             <button class="dec-btn" onclick="setStatus('1-7','approve')" title="Approve">✓</button>
             <button class="dec-btn" onclick="setStatus('1-7','flag')" title="Flag">⚑</button>
@@ -544,6 +559,30 @@ body {
           </div>
         </div>
         <div class="dec-comments" style="display:none" id="comments-1-7"></div>
+      </div>
+      <div class="dec" data-id="1-7b">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>Inter-site transfers:</strong> Two-step inventory transfers (ship → in-transit → receive). ~97% of transfers flow ARV → TUL. Reverse transfers (TUL → ARV) infrequent but follow same process. Sales Order Transfer model behaves as internal sale/purchase for full traceability.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('1-7b','approve')" title="Approve">✓</button>
+            <button class="dec-btn" onclick="setStatus('1-7b','flag')" title="Flag">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('1-7b')" title="Comment">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-1-7b"></div>
+      </div>
+      <div class="dec" data-id="1-8">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>Security:</strong> Role-based access through Savant Mobile (handhelds) and Savant Admin Console (web). Users limited to modules authorized for their job function/security role.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('1-8','approve')" title="Approve">✓</button>
+            <button class="dec-btn" onclick="setStatus('1-8','flag')" title="Flag">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('1-8')" title="Comment">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-1-8"></div>
       </div>
     </div>
   </div>
@@ -571,7 +610,7 @@ body {
       <div class="dec" data-id="2-2">
         <div class="dec-main">
           <span class="dec-status confirmed">Confirmed</span>
-          <span class="dec-text"><strong>No serial/lot tracking</strong> in Phase 1. Future phases may add serial for high-value items. No non-stock items. No substitutions.</span>
+          <span class="dec-text"><strong>No serial/lot tracking</strong> in Phase 1. Future phases may add serial for high-value items. No non-stock items. No substitutions permitted.</span>
           <div class="dec-actions">
             <button class="dec-btn" onclick="setStatus('2-2','approve')">✓</button>
             <button class="dec-btn" onclick="setStatus('2-2','flag')">⚑</button>
@@ -579,6 +618,30 @@ body {
           </div>
         </div>
         <div class="dec-comments" style="display:none" id="comments-2-2"></div>
+      </div>
+      <div class="dec" data-id="2-2b">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>UPC &amp; Cross Reference:</strong> Acumatica is master of record for both UPC and Cross Reference data. Savant syncs from Acumatica. UPC values must be unique per item for accurate tracking and identification.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('2-2b','approve')">✓</button>
+            <button class="dec-btn" onclick="setStatus('2-2b','flag')">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('2-2b')">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-2-2b"></div>
+      </div>
+      <div class="dec" data-id="2-2c">
+        <div class="dec-main">
+          <span class="dec-status confirmed">Confirmed</span>
+          <span class="dec-text"><strong>Product Attributes:</strong> Crusoe uses Acumatica Product Attributes — Manufacturer Name, Manufacturer Part Description, Manufacturer Part Number. These can be mapped to Savant WMS as needed.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('2-2c','approve')">✓</button>
+            <button class="dec-btn" onclick="setStatus('2-2c','flag')">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('2-2c')">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-2-2c"></div>
       </div>
       <div class="dec" data-id="2-3">
         <div class="dec-main">
@@ -595,7 +658,7 @@ body {
       <div class="dec" data-id="2-4">
         <div class="dec-main">
           <span class="dec-status standard">Standard</span>
-          <span class="dec-text"><strong>Putaway:</strong> Zone-level rules from item attributes, direct-to-home-location, location override available. <strong>Replenishment:</strong> Home locations + Min/Max for 2-bin sections.</span>
+          <span class="dec-text"><strong>Putaway:</strong> Managed through Savant Mobile Putaway module. Zone-level rules based on zone attribute at item level in Acumatica. Direct-to-home-location when home location assigned. Location override available to operators. <strong>Replenishment:</strong> Traditional bulk-to-pick replenishment minimal at Crusoe — most materials put away directly into working zones. Home locations with Min/Max replenishment for small 2-bin section. Both directed and manual replenishment methods available in Savant.</span>
           <div class="dec-actions">
             <button class="dec-btn" onclick="setStatus('2-4','approve')">✓</button>
             <button class="dec-btn" onclick="setStatus('2-4','flag')">⚑</button>
@@ -607,7 +670,7 @@ body {
       <div class="dec" data-id="2-5">
         <div class="dec-main">
           <span class="dec-status confirmed">Confirmed</span>
-          <span class="dec-text"><strong>Labeling:</strong> LP IDs (4×6) assigned per pallet at receiving. Standard Savant LP, SKU, product labels. Mods via change request. UPC unique per item, Acumatica as master.</span>
+          <span class="dec-text"><strong>Labeling:</strong> Purchased products labeled by supplier. Subassemblies and finished goods labeled in-house. LP IDs (4×6 in.) assigned per pallet at receiving — consolidates multiple cases under single identifier for streamlined receiving, putaway, and picking. Stores item, quantity, and location data. Standard SKU labels printable during receiving or from Savant Mobile/Reprint Labels. Standard Savant LP, SKU, and product labels used. Modifications available via formal change request.</span>
           <div class="dec-actions">
             <button class="dec-btn" onclick="setStatus('2-5','approve')">✓</button>
             <button class="dec-btn" onclick="setStatus('2-5','flag')">⚑</button>
@@ -619,7 +682,7 @@ body {
       <div class="dec" data-id="2-6">
         <div class="dec-main">
           <span class="dec-status standard">Standard</span>
-          <span class="dec-text"><strong>Cycle counts:</strong> Class A (top 80% value) monthly, Class B–D annual. Non-directed entry in Savant → results pushed to Acumatica.</span>
+          <span class="dec-text"><strong>Cycle counts:</strong> Driven by accounting department based on inventory value. Class A (top 80% of total value) counted monthly. Class B–D (remaining items) full count annually. Current process is manual using blind count sheets. Savant will support non-directed/manual count entry — results pushed to Acumatica for posting. Savant will not automate cycle scheduling.</span>
           <div class="dec-actions">
             <button class="dec-btn" onclick="setStatus('2-6','approve')">✓</button>
             <button class="dec-btn" onclick="setStatus('2-6','flag')">⚑</button>
@@ -628,10 +691,17 @@ body {
         </div>
         <div class="dec-comments" style="display:none" id="comments-2-6"></div>
       </div>
+      <p style="font-size:0.72rem;font-weight:600;color:var(--ink);margin-bottom:0.3rem;">Adjustment Flow</p>
+      <div class="flow">
+        <span class="flow-s">Operator → Quarantine</span><span class="flow-a">→</span>
+        <span class="flow-s">Supervisor Adjustment (Savant)</span><span class="flow-a">→</span>
+        <span class="flow-s">Issue Doc → Acumatica (Hold)</span><span class="flow-a">→</span>
+        <span class="flow-s">Accounting Release</span>
+      </div>
       <div class="dec" data-id="2-7">
         <div class="dec-main">
           <span class="dec-status confirmed">Confirmed</span>
-          <span class="dec-text"><strong>Adjustments:</strong> All originate in Savant → push to Acumatica. Flow: Operator → Quarantine → Supervisor adjustment → Savant creates Issue doc (Hold) → Accounting releases. Reason codes aligned.</span>
+          <span class="dec-text"><strong>Adjustments:</strong> All originate in Savant → push to Acumatica. Flow: Operator moves questionable stock to Review/Quarantine via handheld → Supervisor reviews and performs Adjustment in Savant → Savant creates Inventory Issue doc in Acumatica (set to Hold) → Savant immediately reflects qty change for warehouse visibility → Accounting reviews and releases for posting in Acumatica. Reason codes aligned between systems: BADDEBT, DAMAGED, INADJUST, INISSUE, INISSUEMFG, INRECEIPT, LANDEDCOST, MIGRATION, PARTADJ, PHYINVADJ, PPVADJ, TRANSFER, VENDORRET.</span>
           <div class="dec-actions">
             <button class="dec-btn" onclick="setStatus('2-7','approve')">✓</button>
             <button class="dec-btn" onclick="setStatus('2-7','flag')">⚑</button>
@@ -673,7 +743,7 @@ body {
       <div class="dec" data-id="3-1">
         <div class="dec-main">
           <span class="dec-status confirmed">Confirmed</span>
-          <span class="dec-text"><strong>Receiving rules:</strong> Under-receiving allowed. Items not on PO rejected. Nonconforming items received for traceability. Attachments (heat #s, certs) stay in Acumatica.</span>
+          <span class="dec-text"><strong>Receiving rules:</strong> Under-receiving permitted. Items not on original PO are not accepted. Nonconforming items received to maintain traceability. Heat numbers, inspection results, and supplier certifications uploaded under PO/Item Files tab in Acumatica — Savant will not manage attachments. Quality control managed through QMS (E-Workplace Apps).</span>
           <div class="dec-actions">
             <button class="dec-btn" onclick="setStatus('3-1','approve')">✓</button>
             <button class="dec-btn" onclick="setStatus('3-1','flag')">⚑</button>
@@ -685,7 +755,7 @@ body {
       <div class="dec" data-id="3-2">
         <div class="dec-main">
           <span class="dec-status confirmed">Confirmed</span>
-          <span class="dec-text"><strong>QMS Integration:</strong> Savant auto-marks QMS Hold on QC items. Push notification from QMS (E-Workplace Apps) releases hold. Reason codes in Savant. <em>See Addendum 001.</em></span>
+          <span class="dec-text"><strong>QMS Integration:</strong> When receiving items requiring QC, Savant automatically marks them with QMS Hold status — quantities not available for production or shipment. Once QMS (E-Workplace Apps) marks inventory as approved, a push notification from Acumatica/QMS automatically releases the hold in Savant. Change request: Configure push notifications from QMS to Savant for automatic QC release. Reason codes created in Savant. <em>Full specification: Addendum 001.</em></span>
           <div class="dec-actions">
             <button class="dec-btn" onclick="setStatus('3-2','approve')">✓</button>
             <button class="dec-btn" onclick="setStatus('3-2','flag')">⚑</button>
@@ -709,7 +779,7 @@ body {
       <div class="dec" data-id="3-4">
         <div class="dec-main">
           <span class="dec-status confirmed">Confirmed</span>
-          <span class="dec-text"><strong>Vendor returns:</strong> Move to Quarantine → Procurement/Quality notified → RMA in Acumatica → one-sided adjustment in Savant.</span>
+          <span class="dec-text"><strong>Vendor returns:</strong> Material moved to Review or Quarantine location in both Savant and Acumatica. Procurement and Quality teams notified. RMA (Return to Vendor) process initiated. Return processed as Purchase Return in Acumatica with corresponding one-sided inventory adjustment in Savant to reflect physical removal of material.</span>
           <div class="dec-actions">
             <button class="dec-btn" onclick="setStatus('3-4','approve')">✓</button>
             <button class="dec-btn" onclick="setStatus('3-4','flag')">⚑</button>
@@ -732,7 +802,7 @@ body {
       <div class="dec" data-id="4-1">
         <div class="dec-main">
           <span class="dec-status confirmed">Confirmed</span>
-          <span class="dec-text"><strong>MO flow:</strong> Originate in Acumatica → auto-flow to Savant with full BOM. Savant creates separate work-center-level MOs from each Acumatica MO. Fully barcode-driven, operation-based.</span>
+          <span class="dec-text"><strong>MO flow:</strong> Savant WMS is the execution layer for production material flow and confirmations. Acumatica remains system of record. Process is fully barcode-driven and operation-based. MOs originate in Acumatica → flow automatically into Savant carrying full BOM hierarchy (raws + subassemblies). Savant creates separate work-center-level manufacturing orders from each Acumatica MO.</span>
           <div class="dec-actions">
             <button class="dec-btn" onclick="setStatus('4-1','approve')">✓</button>
             <button class="dec-btn" onclick="setStatus('4-1','flag')">⚑</button>
@@ -768,7 +838,7 @@ body {
       <div class="dec" data-id="4-4">
         <div class="dec-main">
           <span class="dec-status confirmed">Confirmed</span>
-          <span class="dec-text"><strong>Outsourced production:</strong> Copper parts via Acumatica vendor shipment flow — scan materials sent, receive finished parts, link to MO. <em>See Addendum 004.</em></span>
+          <span class="dec-text"><strong>Outsourced production:</strong> Outsourced copper parts follow Acumatica vendor shipment flow: (1) Scan and record materials sent to vendors (2) Receive finished parts back (3) Link to originating MO in Acumatica. <em>Full specification: Addendum 004.</em></span>
           <div class="dec-actions">
             <button class="dec-btn" onclick="setStatus('4-4','approve')">✓</button>
             <button class="dec-btn" onclick="setStatus('4-4','flag')">⚑</button>
@@ -836,7 +906,7 @@ body {
       <div class="dec" data-id="5-2">
         <div class="dec-main">
           <span class="dec-status confirmed">Confirmed</span>
-          <span class="dec-text"><strong>No QC/Packing module.</strong> Ship Confirm via Savant Mobile → auto-updates Acumatica. Standard Packing List available. Standard Savant labels/reports.</span>
+          <span class="dec-text"><strong>No QC/Packing module.</strong> Ship Confirm via Savant Mobile Ship Confirm module → confirmation automatically updates shipment status to Confirmed in Acumatica. Crusoe may print and distribute Savant Packing List to clients, detailing all pallets and their contents. Standard Savant labels/reports; modifications via formal change request.</span>
           <div class="dec-actions">
             <button class="dec-btn" onclick="setStatus('5-2','approve')">✓</button>
             <button class="dec-btn" onclick="setStatus('5-2','flag')">⚑</button>
@@ -875,6 +945,103 @@ body {
       <tr><td class="a-id">006</td><td><strong>Inventory Transfers (Non-WMS ↔ WMS)</strong><br><span style="font-size:0.68rem;color:var(--ink-faint)">Phase 1 mixed environment transfer handling</span></td><td>Customization</td><td><span class="sdot" style="background:var(--green)"></span>Complete</td></tr>
     </tbody>
   </table>
+</div>
+
+<!-- VERSION HISTORY TAB -->
+<div class="tab-panel" id="panel-history">
+  <div class="sec open">
+    <div class="sec-head" onclick="this.closest('.sec').classList.toggle('open')">
+      <span class="sec-title">Blueprint Version History</span>
+      <span class="sec-toggle">▼</span>
+    </div>
+    <div class="sec-body">
+      <div class="dec" data-id="v-22">
+        <div class="dec-main">
+          <span class="dec-status confirmed" style="font-size:0.6rem;">v2.2</span>
+          <span class="dec-text"><strong>Final update — Signed January 26, 2026.</strong> Pilot site changed from Arvada to Tulsa 2. Cancelled CRs resolved: Partial MO Picking (standard functionality covers use case), Issue When Required confirmation screen (standard Savant issue process used). All addendum references finalized. All open topics addressed. Signed by Ian Kelly (Crusoe) and Savant Software, Inc.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('v-22','approve')">✓</button>
+            <button class="dec-btn" onclick="setStatus('v-22','flag')">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('v-22')">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-v-22"></div>
+      </div>
+      <div class="dec" data-id="v-21">
+        <div class="dec-main">
+          <span class="dec-status standard" style="font-size:0.6rem;">v2.1</span>
+          <span class="dec-text"><strong>Post-Discovery Update.</strong> Blueprint addendum references added: QMS Integration (001), Picking by Work Center (002), Backflushed Materials (003), Outside Process Vendor Shipment (004), Production Order Moves (005), Inventory Transfers Non-WMS to WMS (006).</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('v-21','approve')">✓</button>
+            <button class="dec-btn" onclick="setStatus('v-21','flag')">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('v-21')">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-v-21"></div>
+      </div>
+      <div class="dec" data-id="v-20">
+        <div class="dec-main">
+          <span class="dec-status pending" style="font-size:0.6rem;">v2.0</span>
+          <span class="dec-text"><strong>Initial draft.</strong> Module scope defined. Warehouse structure documented for all four sites. Core process flows established for receiving, production, and order fulfillment. Inventory configuration, putaway/replenishment rules, labeling, cycle counts, adjustments, and transfer models documented.</span>
+          <div class="dec-actions">
+            <button class="dec-btn" onclick="setStatus('v-20','approve')">✓</button>
+            <button class="dec-btn" onclick="setStatus('v-20','flag')">⚑</button>
+            <button class="dec-btn" onclick="toggleComments('v-20')">💬</button>
+          </div>
+        </div>
+        <div class="dec-comments" style="display:none" id="comments-v-20"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TEAM TAB -->
+<div class="tab-panel" id="panel-team">
+  <div class="sec open">
+    <div class="sec-head" onclick="this.closest('.sec').classList.toggle('open')">
+      <span class="sec-title">Savant Software</span>
+      <span class="sec-toggle">▼</span>
+    </div>
+    <div class="sec-body">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.5rem;">
+        <div style="background:var(--warm);border:1px solid var(--border);border-radius:8px;padding:0.85rem;">
+          <div style="font-size:0.85rem;font-weight:600;">Chris Jackson</div>
+          <div style="font-size:0.72rem;color:var(--ink-muted);margin-top:0.1rem;">President</div>
+          <div style="font-size:0.62rem;color:var(--ink-faint);font-weight:500;margin-top:0.2rem;text-transform:uppercase;letter-spacing:0.04em;">Savant Software, Inc.</div>
+        </div>
+        <div style="background:var(--warm);border:1px solid var(--border);border-radius:8px;padding:0.85rem;">
+          <div style="font-size:0.85rem;font-weight:600;">Guillermo</div>
+          <div style="font-size:0.72rem;color:var(--ink-muted);margin-top:0.1rem;">Project Manager</div>
+          <div style="font-size:0.62rem;color:var(--ink-faint);font-weight:500;margin-top:0.2rem;text-transform:uppercase;letter-spacing:0.04em;">Savant Software, Inc.</div>
+        </div>
+        <div style="background:var(--warm);border:1px solid var(--border);border-radius:8px;padding:0.85rem;">
+          <div style="font-size:0.85rem;font-weight:600;">James</div>
+          <div style="font-size:0.72rem;color:var(--ink-muted);margin-top:0.1rem;">Implementation</div>
+          <div style="font-size:0.62rem;color:var(--ink-faint);font-weight:500;margin-top:0.2rem;text-transform:uppercase;letter-spacing:0.04em;">Savant Software, Inc.</div>
+        </div>
+        <div style="background:var(--warm);border:1px solid var(--border);border-radius:8px;padding:0.85rem;">
+          <div style="font-size:0.85rem;font-weight:600;">Diane Cawley</div>
+          <div style="font-size:0.72rem;color:var(--ink-muted);margin-top:0.1rem;">Implementation</div>
+          <div style="font-size:0.62rem;color:var(--ink-faint);font-weight:500;margin-top:0.2rem;text-transform:uppercase;letter-spacing:0.04em;">Savant Software, Inc.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sec open" style="margin-top:0.65rem;">
+    <div class="sec-head" onclick="this.closest('.sec').classList.toggle('open')">
+      <span class="sec-title">Crusoe</span>
+      <span class="sec-toggle">▼</span>
+    </div>
+    <div class="sec-body">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.5rem;">
+        <div style="background:var(--warm);border:1px solid var(--border);border-radius:8px;padding:0.85rem;">
+          <div style="font-size:0.85rem;font-weight:600;">Ian Kelly</div>
+          <div style="font-size:0.72rem;color:var(--ink-muted);margin-top:0.1rem;">Project Sponsor · Blueprint Signatory</div>
+          <div style="font-size:0.62rem;color:var(--ink-faint);font-weight:500;margin-top:0.2rem;text-transform:uppercase;letter-spacing:0.04em;">Crusoe · Denver, CO</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ACTIVITY TAB -->
