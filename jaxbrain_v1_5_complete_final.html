@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --or:#e85d04;--ord:rgba(232,93,4,0.12);--orb:rgba(232,93,4,0.28);
+  --bk:#0a0a0c;--s1:#141418;--s2:#1e1e24;--s3:#28282f;
+  --br:rgba(255,255,255,0.07);--tx:#fff;--t2:rgba(255,255,255,0.6);--t3:rgba(255,255,255,0.3);
+  --gn:#16a34a;--pu:#7c3aed;--bl:#2563eb;--am:#d97706;--re:#dc2626;
+}
+body{font-family:-apple-system,Arial,sans-serif;background:var(--bk);color:var(--tx);max-width:390px;margin:0 auto;overflow-x:hidden}
+.scr{display:none}.scr.on{display:block;animation:fu .2s ease}
+@keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.pad{height:80px}.pad-sm{height:20px}
+
+/* SHARED */
+.sbar{display:flex;justify-content:space-between;padding:10px 20px 4px;font-size:13px;font-weight:600}
+.sbar-r{display:flex;gap:5px;font-size:11px;color:var(--t2)}
+.tnav{display:flex;align-items:center;justify-content:space-between;padding:2px 20px 10px}
+.brand{display:flex;align-items:center;gap:9px}
+.bi{width:30px;height:30px;border-radius:8px;background:var(--or);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:#fff}
+.bn{font-size:16px;font-weight:700;letter-spacing:-.5px}.bn span{color:var(--or)}
+.nav-acts{display:flex;gap:7px}
+.nb{width:33px;height:33px;border-radius:9px;background:var(--s2);border:.5px solid var(--br);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;position:relative}
+.nb .dot{position:absolute;top:5px;right:5px;width:6px;height:6px;background:var(--or);border-radius:50%;border:1.5px solid var(--bk)}
+.tabs{display:flex;margin:0 20px 12px;background:var(--s1);border-radius:10px;padding:3px;border:.5px solid var(--br)}
+.tab{flex:1;text-align:center;font-size:10px;font-weight:600;padding:5px 2px;border-radius:8px;cursor:pointer;color:var(--t3);transition:all .2s;user-select:none}
+.tab.on{background:var(--or);color:#fff}
+.shd{display:flex;justify-content:space-between;align-items:center;padding:0 20px 8px}
+.stl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--t3)}
+.slk{font-size:12px;color:var(--or);cursor:pointer}
+.tc{margin:0 20px 7px;background:var(--s1);border:.5px solid var(--br);border-radius:12px;padding:12px 13px;cursor:pointer;transition:border-color .15s}
+.tc:hover{border-color:var(--orb)}.tc.iq{border-left:3px solid var(--or)}.tc.eq{border-left:3px solid var(--pu)}
+.tct{display:flex;justify-content:space-between;gap:7px;margin-bottom:4px}
+.tctitle{font-size:12px;font-weight:600;line-height:1.35;flex:1}
+.tcbw{display:flex;flex-direction:column;gap:3px;align-items:flex-end;flex-shrink:0}
+.bx{font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px}
+.bt{background:var(--s3);color:var(--t3)}.biq{background:var(--ord);color:var(--or)}.beq{background:rgba(124,58,237,.1);color:var(--pu)}
+.tcbody{font-size:11px;color:var(--t2);line-height:1.5;margin-bottom:6px}
+.tcft{display:flex;justify-content:space-between;align-items:center}
+.tctags{display:flex;gap:4px}.tctag{font-size:9px;padding:2px 6px;border-radius:10px;background:var(--s3);color:var(--t3)}
+.tctime{font-size:9px;color:var(--t3)}
+.bnav{position:sticky;bottom:0;background:var(--s1);border-top:.5px solid var(--br);display:flex;padding:8px 0 18px;z-index:50}
+.bni{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}
+.bni-ic{font-size:18px}.bni-lb{font-size:10px;color:var(--t3);font-weight:500;transition:color .15s}
+.bni.on .bni-lb{color:var(--or)}
+.topbar{display:flex;align-items:center;gap:10px;padding:14px 20px 10px}
+.back{width:32px;height:32px;border-radius:8px;background:var(--s2);border:.5px solid var(--br);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0}
+.tb-info{flex:1}.tb-ey{font-size:10px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.8px}
+.tb-title{font-size:14px;font-weight:700;margin-top:1px;line-height:1.3}
+.tb-sub{font-size:11px;color:var(--or);margin-top:1px;font-weight:600}
+.tb-acts{display:flex;gap:6px}
+.tba{width:32px;height:32px;border-radius:8px;background:var(--s2);border:.5px solid var(--br);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px}
+
+/* ── HOME ── */
+.greet{margin:0 20px 12px;background:var(--s1);border:.5px solid var(--orb);border-radius:14px;padding:14px 16px;position:relative;overflow:hidden}
+.greet::after{content:'';position:absolute;top:-20px;right:-20px;width:90px;height:90px;background:radial-gradient(circle,rgba(232,93,4,.15),transparent 65%);pointer-events:none}
+.gey{font-size:9px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}
+.gname{font-size:19px;font-weight:700;margin-bottom:3px}.gname span{color:var(--or)}
+.mb-banner{background:var(--s2);border-radius:9px;padding:9px 12px;margin-bottom:10px;cursor:pointer;border:.5px solid var(--br)}
+.mb-row{display:flex;align-items:center;justify-content:space-between}
+.mb-txt{font-size:12px;color:var(--t2)}.mb-txt strong{color:var(--tx)}
+.mb-arr{font-size:14px;color:var(--or)}
+.mb-list{margin-top:8px;display:none}.mb-list.open{display:block}
+.mb-meeting{display:flex;align-items:center;gap:8px;padding:5px 0;border-top:.5px solid var(--br)}
+.mb-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.mb-dot.found{background:var(--gn)}.mb-dot.none{background:var(--s3);border:.5px solid var(--br)}
+.mb-mn{font-size:11px;color:var(--t2);flex:1}.mb-mt{font-size:10px;color:var(--t3)}
+.ctx-btn{font-size:10px;font-weight:700;padding:3px 9px;border-radius:6px;cursor:pointer;border:none;font-family:inherit;transition:all .2s;user-select:none}
+.ctx-btn.has{background:rgba(22,163,74,.12);color:var(--gn);border:.5px solid rgba(22,163,74,.3)}
+.ctx-btn.has:hover,.ctx-btn.flipped{background:var(--or);color:#fff;border-color:var(--or)}
+.ctx-btn.no{background:var(--s3);color:var(--t3);border:.5px solid var(--br);cursor:default}
+.debrief{margin-top:6px;background:var(--s2);border:.5px solid var(--orb);border-radius:11px;overflow:hidden;display:none}
+.debrief.open{display:block;animation:fu .2s ease}
+.db-hdr{padding:8px 12px;background:var(--or);display:flex;align-items:center;justify-content:space-between}
+.db-hdr-t{font-size:11px;font-weight:700;color:#fff}.db-hdr-c{font-size:14px;color:rgba(255,255,255,.8);cursor:pointer}
+.db-body{padding:10px 12px}
+.db-sec{margin-bottom:7px}.db-sec-t{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--t3);margin-bottom:3px}
+.db-fact{font-size:11px;color:var(--t2);line-height:1.5;padding:4px 8px;background:var(--s3);border-radius:6px;margin-bottom:3px}
+.db-fact strong{color:var(--tx)}
+.db-tp{padding:7px 10px;background:var(--ord);border:.5px solid var(--orb);border-radius:8px;font-size:11px;color:var(--or);line-height:1.5}
+.db-tp::before{content:'💡 '}
+.db-acts{display:flex;gap:6px;margin-top:9px;padding-top:8px;border-top:.5px solid var(--br)}
+.db-btn{flex:1;padding:7px;border-radius:8px;font-size:11px;font-weight:700;font-family:inherit;cursor:pointer;border:none}
+.db-btn.p{background:var(--or);color:#fff}.db-btn.s{background:var(--s3);color:var(--t2)}
+.streak-inline{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:.5px solid var(--br);border-bottom:.5px solid var(--br);margin-bottom:10px}
+.si-l{display:flex;align-items:baseline;gap:5px}
+.si-n{font-size:24px;font-weight:700;color:var(--or)}
+.si-lb{font-size:10px;color:var(--t2)}.si-sb{font-size:9px;color:var(--t3)}
+.si-days{display:flex;gap:3px}
+.sd{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;background:var(--s3);color:var(--t3)}
+.sd.done{background:var(--or);color:#fff}.sd.today{border:1.5px solid var(--or);color:var(--or)}
+.health-row{display:flex;align-items:center}
+.ring-wrap{position:relative;width:52px;height:52px;flex-shrink:0}
+.ring-wrap svg{transform:rotate(-90deg)}
+.ring-score{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:14px;font-weight:700;color:var(--or)}
+.hdims{flex:1;padding-left:12px}
+.hdim{margin-bottom:4px}
+.hd-row{display:flex;justify-content:space-between;margin-bottom:2px}
+.hdn{font-size:9px;color:var(--t2)}.hdp{font-size:9px}
+.hdt{height:3px;background:var(--s3);border-radius:2px;overflow:hidden}.hdf{height:100%;border-radius:2px}
+.qcap{margin:0 20px 14px;background:var(--s1);border:.5px solid var(--orb);border-radius:12px;padding:11px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:background .15s}
+.qcap:hover{background:var(--s2)}
+.qci{width:34px;height:34px;background:var(--or);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.qcm{flex:1}.qcmt{font-size:12px;font-weight:600}.qcms{font-size:10px;color:var(--t3);margin-top:1px}
+.qca{font-size:16px;color:var(--or)}
+.pipe-scroll{display:flex;gap:8px;overflow-x:auto;padding:0 20px 16px;scrollbar-width:none}
+.pipe-scroll::-webkit-scrollbar{display:none}
+.pc{min-width:140px;background:var(--s1);border:.5px solid var(--br);border-radius:12px;padding:11px;flex-shrink:0;cursor:pointer;transition:border-color .15s}
+.pc:hover{border-color:var(--orb)}
+.pcs{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px}
+.pcs.q{color:var(--or)}.pcs.n{color:var(--am)}.pcs.d{color:var(--bl)}
+.pcn{font-size:12px;font-weight:600;margin-bottom:4px;line-height:1.3}
+.pcv{font-size:15px;font-weight:700;color:var(--or)}.pcvl{font-size:9px;color:var(--t3);margin-top:1px}
+.pc-src{font-size:8px;color:var(--t3);margin-top:4px}
+
+/* ── CAPTURE ── */
+.cap-wrap{padding:4px 20px 0}
+.cap-title{font-size:21px;font-weight:700;margin-bottom:2px}
+.cap-sub{font-size:12px;color:var(--t2);margin-bottom:14px}
+.cap-iw{position:relative;margin-bottom:8px}
+.cap-in{width:100%;background:var(--s1);border:.5px solid var(--orb);border-radius:12px;padding:13px 50px 13px 13px;color:var(--tx);font-size:13px;font-family:inherit;resize:none;min-height:108px;outline:none;line-height:1.6}
+.cap-in::placeholder{color:var(--t3)}.cap-in:focus{border-color:var(--or)}
+.mic-btn{position:absolute;bottom:12px;right:12px;width:34px;height:34px;border-radius:50%;background:var(--s3);border:.5px solid var(--br);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:all .15s}
+.mic-btn:hover{background:var(--or);border-color:var(--or)}
+.mic-btn.rec{background:var(--re);border-color:var(--re);animation:prec .8s ease infinite}
+@keyframes prec{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.mic-st{font-size:11px;color:var(--re);text-align:center;min-height:14px;margin-bottom:6px}
+.cap-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.co{background:var(--s1);border:.5px solid var(--br);border-radius:10px;padding:10px}
+.col{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);margin-bottom:6px}
+.col-tip{font-size:8px;color:var(--or);font-weight:400;text-transform:none;letter-spacing:0;cursor:pointer}
+.cops{display:flex;gap:4px;flex-wrap:wrap}
+.cop{font-size:10px;padding:3px 7px;border-radius:5px;background:var(--s3);color:var(--t2);cursor:pointer;border:none;font-family:inherit;transition:all .15s}
+.cop.on{background:var(--or);color:#fff}.cop.oneq{background:var(--pu);color:#fff}
+.tier-btn{font-size:10px;padding:3px 7px;border-radius:5px;background:var(--s3);color:var(--t2);cursor:pointer;border:none;font-family:inherit;transition:all .15s}
+.tier-btn.on{background:var(--or);color:#fff}
+.tier-lk{font-size:10px;color:var(--am);margin-top:5px;display:none;align-items:center;gap:3px}
+.tier-lk.show{display:flex}
+.type-help{margin-top:7px;background:var(--s2);border-radius:8px;padding:8px 10px;display:none}
+.type-help.show{display:block}
+.te{display:flex;gap:6px;margin-bottom:3px}.te:last-child{margin-bottom:0}
+.te-t{font-size:10px;font-weight:700;color:var(--or);width:32px;flex-shrink:0}
+.te-d{font-size:10px;color:var(--t2);line-height:1.4}
+.pp-wrap{margin-top:8px;background:var(--s1);border:.5px solid var(--orb);border-radius:10px;padding:10px;display:none}
+.pp-wrap.open{display:block}
+.pp-search{width:100%;background:var(--s2);border:.5px solid var(--br);border-radius:7px;padding:6px 10px;color:var(--tx);font-size:12px;font-family:inherit;outline:none;margin-bottom:7px}
+.pp-search::placeholder{color:var(--t3)}
+.pp-list{display:flex;gap:5px;flex-wrap:wrap}
+.pp-p{font-size:11px;padding:4px 9px;border-radius:20px;border:.5px solid var(--br);background:var(--s2);color:var(--t2);cursor:pointer;transition:all .15s}
+.pp-p:hover,.pp-p.on{background:var(--or);border-color:var(--or);color:#fff}
+.cap-btn{width:100%;margin-top:11px;background:var(--or);color:#fff;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer}
+.cap-btn:hover{background:#c44d03}
+
+/* ── SEARCH ── */
+.srch-wrap{padding:4px 20px 0}
+.srch-bar{display:flex;align-items:center;gap:9px;background:var(--s1);border:.5px solid var(--orb);border-radius:12px;padding:11px 13px;margin-bottom:10px}
+.srch-bar input{flex:1;background:transparent;border:none;color:var(--tx);font-size:13px;font-family:inherit;outline:none}
+.srch-bar input::placeholder{color:var(--t3)}
+.srch-ic{font-size:15px;color:var(--or)}
+.fpills{display:flex;gap:5px;margin-bottom:12px;overflow-x:auto;scrollbar-width:none}
+.fpills::-webkit-scrollbar{display:none}
+.fp{font-size:10px;padding:4px 10px;border-radius:20px;border:.5px solid var(--br);background:var(--s1);color:var(--t2);cursor:pointer;white-space:nowrap;transition:all .15s}
+.fp.on{background:var(--or);border-color:var(--or);color:#fff}
+
+/* ── PEOPLE ── */
+.pcard{margin:0 20px 7px;background:var(--s1);border:.5px solid var(--br);border-radius:12px;padding:12px 13px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color .15s}
+.pcard:hover{border-color:var(--orb)}
+.pav{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.pinfo{flex:1}.pname{font-size:13px;font-weight:600}.prole{font-size:10px;color:var(--t3);margin-top:1px}
+.pbadge{font-size:9px;font-weight:700;padding:3px 7px;border-radius:5px}
+
+/* ── BRAIN ── */
+.brain-wrap{padding:4px 20px 0}
+.brain-title{font-size:21px;font-weight:700;margin-bottom:2px}
+.brain-sub{font-size:12px;color:var(--t2);margin-bottom:12px}
+.streak-card{background:var(--s1);border:.5px solid var(--orb);border-radius:13px;padding:14px;margin:0 20px 10px}
+.streak-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.streak-big{display:flex;align-items:baseline;gap:4px}
+.streak-num{font-size:36px;font-weight:700;color:var(--or)}
+.streak-unit{font-size:12px;color:var(--t2)}.streak-best{font-size:10px;color:var(--t3)}
+.streak-week{display:flex;gap:5px;margin-bottom:7px}
+.sw{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.sw-b{width:100%;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:var(--s3);color:var(--t3)}
+.sw-b.done{background:var(--or);color:#fff}.sw-b.today{border:1.5px solid var(--or);color:var(--or)}
+.sw-d{font-size:8px;color:var(--t3)}.streak-msg{font-size:11px;color:var(--t2);padding-top:7px;border-top:.5px solid var(--br)}
+.hcard{background:var(--s1);border:.5px solid var(--br);border-radius:13px;padding:14px;margin:0 20px 10px}
+.hc-top{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.hring{position:relative;width:72px;height:72px;flex-shrink:0}
+.hring svg{transform:rotate(-90deg)}
+.hring-score{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.hring-num{font-size:20px;font-weight:700;color:var(--or)}.hring-lbl{font-size:8px;color:var(--t3)}
+.hc-right{flex:1}.hc-title{font-size:13px;font-weight:600;margin-bottom:2px}.hc-sub{font-size:11px;color:var(--t2);line-height:1.4}
+.hcd{margin-bottom:7px}
+.hcd-row{display:flex;justify-content:space-between;margin-bottom:3px}
+.hcd-name{font-size:11px;color:var(--t2)}.hcd-pct{font-size:11px;font-weight:600}
+.hcd-track{height:5px;background:var(--s2);border-radius:3px;overflow:hidden}
+.hcd-fill{height:100%;border-radius:3px}
+.hc-tip{font-size:10px;color:var(--t3);padding-top:8px;border-top:.5px solid var(--br);line-height:1.5}
+.badge-card{background:var(--s1);border:.5px solid var(--br);border-radius:13px;padding:14px;margin:0 20px 10px}
+.badge-grid{display:flex;flex-wrap:wrap;gap:9px}
+.badg{text-align:center;cursor:pointer}
+.badg-c{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:19px;margin-bottom:3px;border:.5px solid var(--br);background:var(--s2);transition:transform .15s}
+.badg-c:hover{transform:scale(1.1)}
+.badg-c.e{border-color:var(--orb);background:var(--ord)}.badg-c.lk{opacity:.3;filter:grayscale(1)}.badg-c.ep{border-color:rgba(124,58,237,.4);background:rgba(124,58,237,.1)}
+.badg-n{font-size:8px;color:var(--t3);max-width:50px;text-align:center;line-height:1.3}
+.badg-new{position:relative}.badg-new::after{content:'NEW';position:absolute;top:-3px;right:-3px;background:var(--or);color:#fff;font-size:6px;font-weight:700;padding:1px 3px;border-radius:3px}
+.graph-card{background:var(--s1);border:.5px solid var(--orb);border-radius:13px;overflow:hidden;margin:0 20px 10px}
+.gc-top{display:flex;justify-content:space-between;align-items:center;padding:10px 12px 0}
+.gc-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t3)}
+.gc-ct{font-size:10px;color:var(--t3)}
+canvas{display:block;width:100%;cursor:pointer}
+.graph-hint{font-size:9px;color:var(--t3);text-align:center;padding:4px 0}
+.gfpills{display:flex;gap:5px;padding:6px 12px 0;overflow-x:auto;scrollbar-width:none}
+.gfpills::-webkit-scrollbar{display:none}
+.gfp{font-size:10px;padding:3px 9px;border-radius:20px;border:.5px solid var(--br);background:var(--s2);color:var(--t2);cursor:pointer;white-space:nowrap;transition:all .15s}
+.gfp.on{background:var(--or);border-color:var(--or);color:#fff}
+.gsrch{display:flex;gap:7px;padding:6px 12px 0}
+.gsrch input{flex:1;background:var(--s2);border:.5px solid var(--br);border-radius:8px;padding:5px 9px;color:var(--tx);font-size:11px;font-family:inherit;outline:none}
+.gsrch input:focus{border-color:var(--orb)}.gsrch input::placeholder{color:var(--t3)}
+.gsrch-btn{background:var(--or);color:#fff;border:none;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;font-family:inherit;cursor:pointer}
+.gclusters{display:flex;gap:5px;padding:5px 12px 0;overflow-x:auto;scrollbar-width:none}
+.gclusters::-webkit-scrollbar{display:none}
+.gclp{font-size:10px;padding:3px 9px;border-radius:20px;border:.5px solid var(--br);background:var(--s2);color:var(--t2);cursor:pointer;white-space:nowrap;transition:all .15s}
+.gclp.on{border-color:var(--orb);color:var(--or)}
+.gtime{padding:6px 12px 4px}
+.gtime-row{display:flex;justify-content:space-between;font-size:9px;color:var(--t3);margin-bottom:3px}
+input[type=range]{width:100%;accent-color:var(--or)}
+.gstats{display:flex;gap:5px;padding:5px 12px 9px}
+.gsb{flex:1;background:var(--s2);border-radius:8px;padding:6px 4px;text-align:center}
+.gsb-n{font-size:14px;font-weight:700}.gsb-l{font-size:8px;color:var(--t3);margin-top:1px}
+.gc-legend{display:flex;flex-wrap:wrap;gap:6px;padding:6px 12px 9px;border-top:.5px solid var(--br)}
+.gl{display:flex;align-items:center;gap:3px}.gl-dot{width:6px;height:6px;border-radius:50%}.gl-lbl{font-size:9px;color:var(--t3)}
+.gnp{margin:0 20px 10px;background:var(--s2);border:.5px solid var(--br);border-radius:12px;padding:11px;display:none}
+.gnp.show{display:block;animation:fu .15s ease}
+.gnp-top{display:flex;justify-content:space-between;gap:7px;margin-bottom:4px}
+.gnp-title{font-size:12px;font-weight:600;flex:1;line-height:1.3}
+.gnp-badges{display:flex;gap:3px}.gnp-body{font-size:11px;color:var(--t2);line-height:1.5;margin-bottom:6px}
+.gnp-ft{display:flex;justify-content:space-between;align-items:center}
+.gnp-tags{display:flex;gap:4px}.gnp-tag{font-size:9px;padding:2px 6px;border-radius:10px;background:var(--s3);color:var(--t3)}
+.gnp-time{font-size:9px;color:var(--t3)}.gnp-close{font-size:10px;color:var(--or);cursor:pointer;margin-top:7px;display:block;text-align:center;padding-top:6px;border-top:.5px solid var(--br)}
+.iqeq{background:var(--s1);border:.5px solid var(--br);border-radius:12px;padding:12px;margin:0 20px 10px}
+.dr{display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.dl{font-size:11px;font-weight:700;width:60px;flex-shrink:0}
+.dtr{flex:1;height:5px;background:var(--s2);border-radius:3px;overflow:hidden}
+.df{height:100%;border-radius:3px}.dp{font-size:10px;width:28px;text-align:right}
+.dn{font-size:10px;color:var(--t3);margin-top:4px;line-height:1.5}
+.tcloud{display:flex;flex-wrap:wrap;gap:5px;margin:0 20px 10px}
+.tp{font-size:10px;padding:4px 9px;border-radius:20px;border:.5px solid var(--br);color:var(--t2);background:var(--s1)}
+.tp.hot{border-color:var(--orb);color:var(--or);background:var(--ord)}
+.grow-card{background:var(--s1);border:.5px solid var(--br);border-radius:12px;padding:12px;margin:0 20px 10px}
+.gbars{display:flex;align-items:flex-end;gap:4px;height:48px;margin-top:7px}
+.gb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.gbn{font-size:8px;color:var(--t3)}.gbb{width:100%;border-radius:3px 3px 0 0;min-height:3px}.gbd{font-size:8px;color:var(--t3)}
+.gwn{font-size:10px;color:var(--t3);margin-top:6px;line-height:1.5}
+
+/* ── ONBOARDING ── */
+.ob-splash{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 30px;text-align:center}
+.ob-logo{width:72px;height:72px;background:var(--or);border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;color:#fff;margin:0 auto 24px}
+.ob-title{font-size:32px;font-weight:700;letter-spacing:-.5px;margin-bottom:8px}
+.ob-title span{color:var(--or)}
+.ob-sub{font-size:15px;color:var(--t2);line-height:1.6;margin-bottom:10px}
+.ob-inv{font-size:12px;color:var(--t3);margin-bottom:36px}
+.ob-inv strong{color:var(--or)}
+.ob-cta{width:100%;background:var(--or);color:#fff;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:10px}
+.ob-cta:hover{background:#c44d03}
+.ob-sec{font-size:12px;color:var(--t3);cursor:pointer}
+.step-dots{display:flex;gap:6px;justify-content:center;padding:14px 0 6px}
+.step-dot{width:6px;height:6px;border-radius:50%;background:var(--s3);transition:all .2s}
+.step-dot.on{background:var(--or);width:20px;border-radius:3px}
+.ob-step{padding:16px 20px}
+.ob-icon{font-size:46px;margin-bottom:14px;display:block}
+.ob-step-title{font-size:22px;font-weight:700;margin-bottom:7px;line-height:1.2}
+.ob-step-sub{font-size:13px;color:var(--t2);line-height:1.7;margin-bottom:18px}
+.ob-demo{background:var(--s1);border:.5px solid var(--orb);border-radius:13px;padding:13px;margin-bottom:16px}
+.ob-demo-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--or);margin-bottom:7px}
+.demo-t{background:var(--s2);border:.5px solid var(--br);border-radius:9px;padding:9px 11px;margin-bottom:5px}
+.demo-t:last-child{margin-bottom:0}
+.dt-row{display:flex;justify-content:space-between;gap:6px;margin-bottom:2px}
+.dt-title{font-size:11px;font-weight:600;flex:1}
+.dt-body{font-size:10px;color:var(--t2);line-height:1.4}
+.ob-step-acts{display:flex;gap:8px}
+.ob-next{flex:1;background:var(--or);color:#fff;border:none;border-radius:12px;padding:13px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer}
+.ob-skip{padding:13px 14px;background:transparent;color:var(--t3);border:none;font-size:12px;font-family:inherit;cursor:pointer}
+.perm-card{background:var(--s2);border:.5px solid var(--br);border-radius:12px;padding:11px 13px;margin-bottom:7px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:border-color .15s}
+.perm-card:hover,.perm-card.granted{border-color:rgba(22,163,74,.3)}
+.perm-icon{font-size:21px;flex-shrink:0}
+.perm-info{flex:1}.perm-title{font-size:12px;font-weight:600}.perm-sub{font-size:10px;color:var(--t3);margin-top:1px}
+.perm-status{font-size:11px;flex-shrink:0}
+.perm-status.on{color:var(--gn)}.perm-status.off{color:var(--t3)}
+.fc-input{width:100%;background:var(--s1);border:.5px solid var(--orb);border-radius:12px;padding:12px;color:var(--tx);font-size:13px;font-family:inherit;resize:none;min-height:88px;outline:none;line-height:1.6;margin-bottom:9px}
+.fc-input::placeholder{color:var(--t3)}.fc-input:focus{border-color:var(--or)}
+.fc-prompts{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.fc-prompt{font-size:11px;padding:4px 10px;border-radius:20px;border:.5px solid var(--br);background:var(--s2);color:var(--t2);cursor:pointer;transition:all .15s}
+.fc-prompt:hover{border-color:var(--orb);color:var(--tx)}
+
+/* ── PRE-CALL PRIMER ── */
+.mt-card{margin:0 20px 12px;background:var(--s1);border:.5px solid var(--orb);border-radius:12px;padding:12px 14px}
+.mt-row{display:flex;align-items:center;justify-content:space-between}
+.mt-l{display:flex;align-items:center;gap:8px}
+.mt-av{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.mt-name{font-size:13px;font-weight:600}.mt-att{font-size:10px;color:var(--t3);margin-top:1px}
+.mt-r{text-align:right}
+.mt-time{font-size:20px;font-weight:700;color:var(--or);line-height:1}
+.mt-lbl{font-size:9px;color:var(--t3);margin-top:2px}
+.mt-prog{margin-top:9px;height:3px;background:var(--s3);border-radius:2px;overflow:hidden}
+.mt-fill{height:100%;background:var(--or);border-radius:2px;width:72%}
+.switcher{display:flex;gap:6px;margin:0 20px 12px;overflow-x:auto;scrollbar-width:none}
+.switcher::-webkit-scrollbar{display:none}
+.sw-pill{font-size:11px;padding:5px 12px;border-radius:20px;border:.5px solid var(--br);background:var(--s1);color:var(--t2);cursor:pointer;white-space:nowrap;transition:all .15s}
+.sw-pill.on{background:var(--or);border-color:var(--or);color:#fff}
+.primer-sec{padding:0 20px 7px;margin-top:4px}
+.primer-sec-t{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);display:flex;align-items:center;gap:4px}
+.ppl-strip{display:flex;gap:8px;padding:0 20px 8px;overflow-x:auto;scrollbar-width:none}
+.ppl-strip::-webkit-scrollbar{display:none}
+.ps-p{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:54px;cursor:pointer}
+.ps-av{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;border:.5px solid var(--br);position:relative}
+.ps-av.linked{border-color:var(--orb)}
+.ps-dot{position:absolute;top:-3px;right:-3px;width:10px;height:10px;background:var(--or);border-radius:50%;border:1.5px solid var(--bk);display:flex;align-items:center;justify-content:center;font-size:6px;font-weight:700;color:#fff}
+.ps-name{font-size:8px;color:var(--t3);text-align:center;line-height:1.2}
+.fact-card{margin:0 20px 6px;background:var(--s1);border:.5px solid var(--br);border-radius:11px;padding:11px 13px}
+.fact-card.iq{border-left:3px solid var(--or)}.fact-card.eq{border-left:3px solid var(--pu)}.fact-card.warn{border-left:3px solid var(--am)}.fact-card.action{border-left:3px solid var(--bl)}
+.fc-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px}
+.fc-lbl.iq{color:var(--or)}.fc-lbl.eq{color:var(--pu)}.fc-lbl.warn{color:var(--am)}.fc-lbl.action{color:var(--bl)}
+.fc-text{font-size:12px;color:var(--t2);line-height:1.6}.fc-text strong{color:var(--tx)}
+.temp-pill{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;font-size:11px;font-weight:600;margin:0 20px 6px}
+.temp-pill.caution{background:rgba(234,179,8,.1);border:.5px solid rgba(234,179,8,.25);color:#eab308}
+.temp-pill.warm{background:rgba(22,163,74,.1);border:.5px solid rgba(22,163,74,.25);color:var(--gn)}
+.oi{margin:0 20px 5px;display:flex;align-items:flex-start;gap:8px;background:var(--s1);border:.5px solid var(--br);border-radius:10px;padding:10px 12px;cursor:pointer;transition:border-color .15s}
+.oi:hover{border-color:var(--orb)}
+.oi-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.oi-dot.high{background:var(--re)}.oi-dot.mid{background:var(--am)}.oi-dot.low{background:var(--t3)}
+.oi-text{flex:1}.oi-title{font-size:12px;font-weight:600}.oi-sub{font-size:10px;color:var(--t3);margin-top:2px}
+.oi-badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;flex-shrink:0}
+.oi-badge.high{background:rgba(220,38,38,.1);color:var(--re);border:.5px solid rgba(220,38,38,.2)}
+.oi-badge.mid{background:rgba(234,179,8,.1);color:var(--am);border:.5px solid rgba(234,179,8,.2)}
+.stats-row{display:flex;gap:6px;margin:4px 20px 6px}
+.stat-mini{flex:1;background:var(--s1);border:.5px solid var(--br);border-radius:9px;padding:8px;text-align:center}
+.sm-num{font-size:16px;font-weight:700}.sm-label{font-size:8px;color:var(--t3);margin-top:2px;line-height:1.3}
+.talking-pt{margin:4px 20px 6px;background:var(--ord);border:.5px solid var(--orb);border-radius:12px;padding:12px 14px}
+.tp-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--or);margin-bottom:5px;display:flex;align-items:center;gap:3px}
+.tp-text{font-size:13px;color:var(--tx);line-height:1.6;font-weight:500}
+.tp-sub{font-size:11px;color:var(--t2);margin-top:4px;line-height:1.5}
+.act-row{display:flex;gap:8px;margin:8px 20px 6px}
+.act-btn{flex:1;padding:12px;border-radius:11px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;border:none;transition:opacity .15s;text-align:center}
+.act-btn.primary{background:var(--or);color:#fff}.act-btn.secondary{background:var(--s1);color:var(--t2);border:.5px solid var(--br)}
+
+/* ── WEEKLY INSIGHT ── */
+.insight-hero{margin:0 20px 14px;background:var(--s1);border:.5px solid var(--orb);border-radius:14px;padding:16px;position:relative;overflow:hidden}
+.insight-hero::after{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(232,93,4,.12),transparent 65%);pointer-events:none}
+.ih-week{font-size:10px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
+.ih-hl{font-size:20px;font-weight:700;line-height:1.3;margin-bottom:7px}
+.ih-hl span{color:var(--or)}
+.ih-sub{font-size:12px;color:var(--t2);line-height:1.6;margin-bottom:12px}
+.ih-stats{display:flex;gap:0;padding-top:12px;border-top:.5px solid var(--br)}
+.ihs{flex:1;text-align:center}
+.ihs+.ihs{border-left:.5px solid var(--br)}
+.ihs-n{font-size:22px;font-weight:700;color:var(--or)}.ihs-l{font-size:9px;color:var(--t3);margin-top:2px}
+.insight-card{margin:0 20px 8px;border-radius:13px;overflow:hidden;cursor:pointer;transition:transform .15s}
+.insight-card:hover{transform:translateY(-1px)}
+.ic-hdr{padding:12px 14px 10px;display:flex;align-items:flex-start;gap:10px}
+.ic-iw{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.ic-top{flex:1}
+.ic-type{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:3px}
+.ic-title{font-size:13px;font-weight:700;line-height:1.35}
+.ic-body{padding:0 14px 11px;font-size:12px;line-height:1.6}
+.ic-action{padding:8px 14px 11px;border-top:.5px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:center}
+.ia-t{font-size:11px;font-weight:600}.ia-a{font-size:14px}
+.ic-pattern{background:var(--s1);border:.5px solid var(--br)}
+.ic-pattern .ic-iw{background:var(--ord)}.ic-pattern .ic-type{color:var(--or)}.ic-pattern .ic-body{color:var(--t2)}.ic-pattern .ia-t{color:var(--or)}
+.ic-eq{background:var(--s1);border:.5px solid rgba(124,58,237,.25)}
+.ic-eq .ic-iw{background:rgba(124,58,237,.1)}.ic-eq .ic-type{color:var(--pu)}.ic-eq .ic-body{color:var(--t2)}.ic-eq .ia-t{color:var(--pu)}
+.ic-cel{background:var(--s1);border:.5px solid rgba(22,163,74,.25)}
+.ic-cel .ic-iw{background:rgba(22,163,74,.1)}.ic-cel .ic-type{color:var(--gn)}.ic-cel .ic-body{color:var(--t2)}.ic-cel .ia-t{color:var(--gn)}
+.ic-flag{background:var(--s1);border:.5px solid rgba(217,119,6,.25)}
+.ic-flag .ic-iw{background:rgba(217,119,6,.1)}.ic-flag .ic-type{color:var(--am)}.ic-flag .ic-body{color:var(--t2)}.ic-flag .ia-t{color:var(--am)}
+.ic-pred{background:var(--s1);border:.5px solid rgba(37,99,235,.25)}
+.ic-pred .ic-iw{background:rgba(37,99,235,.1)}.ic-pred .ic-type{color:var(--bl)}.ic-pred .ic-body{color:var(--t2)}.ic-pred .ia-t{color:var(--bl)}
+.split-row{display:flex;gap:8px;margin:0 20px 10px}
+.split-card{flex:1;background:var(--s1);border:.5px solid var(--br);border-radius:12px;padding:12px;text-align:center}
+.split-num{font-size:28px;font-weight:700;line-height:1}
+.split-label{font-size:10px;color:var(--t3);margin-top:3px}
+.split-change{font-size:10px;margin-top:4px;font-weight:600}
+.split-bar-track{height:5px;background:var(--s2);border-radius:3px;overflow:hidden;margin-top:8px}
+.split-bar-fill{height:100%;border-radius:3px}
+.topic-heat{margin:0 20px 10px;background:var(--s1);border:.5px solid var(--br);border-radius:13px;padding:13px}
+.th-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.th-row:last-child{margin-bottom:0}
+.th-rank{font-size:10px;color:var(--t3);font-weight:700;width:16px;text-align:center;flex-shrink:0}
+.th-name{font-size:12px;font-weight:600;flex:1}
+.th-count{font-size:10px;color:var(--t3);flex-shrink:0;width:22px;text-align:right}
+.th-track{flex:2;height:5px;background:var(--s2);border-radius:3px;overflow:hidden}
+.th-fill{height:100%;border-radius:3px;background:var(--or)}
+.th-badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;flex-shrink:0}
+.th-badge.new{background:var(--ord);color:var(--or)}.th-badge.top{background:rgba(22,163,74,.1);color:var(--gn)}
+.sug{margin:0 20px 6px;background:var(--s2);border:.5px solid var(--br);border-radius:11px;padding:10px 12px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color .15s}
+.sug:hover{border-color:var(--orb)}
+.sug-icon{font-size:17px;flex-shrink:0}
+.sug-text{flex:1}.sug-title{font-size:12px;font-weight:600}.sug-sub{font-size:10px;color:var(--t3);margin-top:1px}
+.sug-arr{font-size:13px;color:var(--or)}
+.next-week{margin:0 20px 10px;background:var(--ord);border:.5px solid var(--orb);border-radius:13px;padding:13px}
+.nw-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--or);margin-bottom:5px}
+.nw-title{font-size:13px;font-weight:700;margin-bottom:5px}
+.nw-body{font-size:12px;color:var(--t2);line-height:1.6}
+.dis-row{display:flex;gap:8px;margin:8px 20px 14px}
+.dis-btn{flex:1;padding:12px;border-radius:11px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;border:none;text-align:center;transition:opacity .15s}
+.dis-btn.primary{background:var(--or);color:#fff}.dis-btn.secondary{background:var(--s1);color:var(--t2);border:.5px solid var(--br)}
+
+/* ── THOUGHT DETAIL ── */
+.detail-topbar{display:flex;align-items:center;gap:10px;padding:14px 20px 10px}
+.dtb-info{flex:1}.dtb-lbl{font-size:10px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.8px}
+.dtb-title{font-size:14px;font-weight:700;margin-top:1px;line-height:1.3}
+.dtb-acts{display:flex;gap:6px}
+.dta{width:32px;height:32px;border-radius:8px;background:var(--s2);border:.5px solid var(--br);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;transition:background .15s}
+.dta:hover{background:var(--s3)}
+.hero-card{margin:0 20px 13px;background:var(--s1);border:.5px solid var(--br);border-radius:14px;overflow:hidden}
+.hero-accent{height:4px}
+.hero-body{padding:15px}
+.hero-badges{display:flex;gap:5px;margin-bottom:9px;flex-wrap:wrap}
+.hero-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px}
+.hb-iq{background:var(--ord);color:var(--or);border:.5px solid var(--orb)}
+.hb-eq{background:rgba(124,58,237,.1);color:var(--pu);border:.5px solid rgba(124,58,237,.25)}
+.hb-tier{background:var(--s3);color:var(--t2);border:.5px solid var(--br)}
+.hb-type{background:var(--s2);color:var(--t3);border:.5px solid var(--br)}
+.hb-new{background:var(--ord);color:var(--or);border:.5px solid var(--orb)}
+.hero-text{font-size:14px;color:var(--tx);line-height:1.7;margin-bottom:11px}
+.hero-meta{display:flex;justify-content:space-between;align-items:center;padding-top:9px;border-top:.5px solid var(--br)}
+.hm-left{font-size:10px;color:var(--t3)}
+.hm-right{display:flex;gap:5px}
+.hm-tag{font-size:10px;padding:3px 8px;border-radius:10px;background:var(--s3);color:var(--t3)}
+.action-item{margin:0 20px 5px;display:flex;align-items:flex-start;gap:9px;background:var(--s1);border:.5px solid var(--br);border-radius:10px;padding:10px 12px;cursor:pointer;transition:border-color .15s}
+.action-item:hover{border-color:var(--orb)}
+.ai-check{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--br);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s}
+.ai-check.done{background:var(--gn);border-color:var(--gn)}
+.ai-check.done::after{content:'✓';color:#fff;font-size:10px;font-weight:700}
+.ai-text{flex:1}.ai-title{font-size:12px;font-weight:600}.ai-who{font-size:10px;color:var(--t3);margin-top:2px}
+.ai-badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;flex-shrink:0}
+.ai-badge.open{background:var(--ord);color:var(--or);border:.5px solid var(--orb)}
+.ai-badge.done-b{background:rgba(22,163,74,.1);color:var(--gn);border:.5px solid rgba(22,163,74,.25)}
+.ppl-linked{display:flex;gap:8px;padding:0 20px 8px;overflow-x:auto;scrollbar-width:none}
+.ppl-linked::-webkit-scrollbar{display:none}
+.pl-p{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:58px;cursor:pointer}
+.pl-av{width:46px;height:46px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;border:.5px solid var(--br);transition:border-color .15s}
+.pl-av:hover{border-color:var(--orb)}
+.pl-name{font-size:9px;color:var(--t3);text-align:center;line-height:1.2}.pl-role{font-size:8px;color:var(--t3);text-align:center;opacity:.7}
+.related-card{margin:0 20px 6px;background:var(--s1);border:.5px solid var(--br);border-radius:11px;padding:11px 13px;cursor:pointer;transition:border-color .15s;display:flex;gap:9px;align-items:flex-start}
+.related-card:hover{border-color:var(--orb)}
+.rc-accent{width:3px;border-radius:2px;flex-shrink:0;align-self:stretch;min-height:34px}
+.rc-content{flex:1}.rc-title{font-size:12px;font-weight:600;margin-bottom:3px;line-height:1.3}
+.rc-body{font-size:10px;color:var(--t2);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.rc-foot{display:flex;justify-content:space-between;margin-top:4px}
+.rc-badge{font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px}.rc-time{font-size:9px;color:var(--t3)}
+.bottom-bar{position:sticky;bottom:0;background:var(--s1);border-top:.5px solid var(--br);padding:10px 20px 20px;display:flex;gap:8px}
+.bb-btn{flex:1;padding:11px;border-radius:10px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;border:none;transition:opacity .15s;text-align:center}
+.bb-btn.primary{background:var(--or);color:#fff}.bb-btn.secondary{background:var(--s2);color:var(--t2);border:.5px solid var(--br)}
+.bb-btn.danger{background:rgba(220,38,38,.1);color:var(--re);border:.5px solid rgba(220,38,38,.2)}
+
+/* ── NOTIFICATIONS ── */
+.notif-hdr{padding:14px 20px 10px;display:flex;align-items:center;justify-content:space-between}
+.nh-t{font-size:18px;font-weight:700}.nh-s{font-size:11px;color:var(--t3);margin-top:2px}
+.nh-clr{font-size:12px;color:var(--or);cursor:pointer}
+.ng-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);padding:8px 20px 6px}
+.ni{margin:0 20px 6px;background:var(--s1);border:.5px solid var(--br);border-radius:12px;padding:11px 13px;display:flex;align-items:flex-start;gap:10px;cursor:pointer;transition:border-color .15s;position:relative}
+.ni:hover{border-color:var(--orb)}.ni.unread{border-color:var(--orb)}
+.ni.unread::before{content:'';position:absolute;top:10px;left:-1px;width:3px;height:calc(100% - 20px);background:var(--or);border-radius:0 2px 2px 0}
+.ni-iw{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.ni-c{flex:1}.ni-t{font-size:12px;font-weight:600;margin-bottom:2px;line-height:1.3}
+.ni-b{font-size:11px;color:var(--t2);line-height:1.5;margin-bottom:3px}
+.ni-a{font-size:11px;font-weight:700;color:var(--or);margin-top:3px;cursor:pointer}
+.ni-tm{font-size:10px;color:var(--t3)}.ni-ud{width:8px;height:8px;background:var(--or);border-radius:50%;flex-shrink:0;margin-top:3px}
+.pref-sec{margin:10px 20px}
+.ps-t{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);margin-bottom:7px}
+.pref-row{display:flex;align-items:center;justify-content:space-between;padding:10px 13px;background:var(--s1);border:.5px solid var(--br);border-radius:10px;margin-bottom:4px;cursor:pointer}
+.pr-i{flex:1}.pr-t{font-size:13px;font-weight:500}.pr-s{font-size:10px;color:var(--t3);margin-top:2px}
+.tog{width:44px;height:26px;background:var(--gn);border-radius:13px;position:relative;flex-shrink:0;cursor:pointer;transition:background .2s}
+.tog.off{background:var(--s3)}.tog-k{position:absolute;top:3px;right:3px;width:20px;height:20px;background:#fff;border-radius:50%;transition:right .2s}
+.tog.off .tog-k{right:21px}
+
+/* ── SETTINGS ── */
+.settings-hdr{padding:14px 20px 10px}
+.sh-t{font-size:18px;font-weight:700}.sh-s{font-size:11px;color:var(--t3);margin-top:2px}
+.profile-card{margin:0 20px 14px;background:var(--s1);border:.5px solid var(--orb);border-radius:14px;padding:15px;display:flex;align-items:center;gap:13px}
+.profile-av{width:54px;height:54px;border-radius:14px;background:var(--or);display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:700;color:#fff;flex-shrink:0}
+.pi-name{font-size:16px;font-weight:700}
+.pi-plan{display:inline-flex;align-items:center;gap:3px;background:var(--ord);border:.5px solid var(--orb);border-radius:4px;padding:2px 6px;font-size:10px;font-weight:700;color:var(--or);margin-top:3px}
+.pi-stat{font-size:10px;color:var(--t3);margin-top:4px}.pi-edit{font-size:11px;color:var(--or);cursor:pointer;margin-left:auto}
+.hm{margin:0 20px 12px;background:var(--s1);border:.5px solid var(--br);border-radius:12px;padding:12px}
+.hm-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.hm-t{font-size:13px;font-weight:600}.hm-sc{font-size:19px;font-weight:700;color:var(--or)}
+.hmd{display:flex;align-items:center;gap:8px;margin-bottom:5px}.hmd:last-child{margin-bottom:0}
+.hmd-n{font-size:10px;color:var(--t2);width:145px;flex-shrink:0}
+.hmd-tr{flex:1;height:4px;background:var(--s2);border-radius:2px;overflow:hidden}
+.hmd-f{height:100%;border-radius:2px}.hmd-p{font-size:10px;font-weight:600;width:26px;text-align:right;flex-shrink:0}
+.ss{margin:0 20px 12px}
+.ss-t{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);margin-bottom:7px}
+.sr{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:var(--s1);border:.5px solid var(--br);border-radius:10px;margin-bottom:4px;cursor:pointer;transition:border-color .15s}
+.sr:hover{border-color:var(--orb)}
+.sr-l{display:flex;align-items:center;gap:10px}
+.sr-ic{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.sr-info{flex:1}.sr-t{font-size:13px;font-weight:500}.sr-s{font-size:10px;color:var(--t3);margin-top:2px}
+.sr-r{display:flex;align-items:center;gap:5px}
+.sr-v{font-size:12px;color:var(--t3)}.sr-a{font-size:14px;color:var(--t3)}
+.srbadge{font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px}
+.srbadge.c{background:rgba(22,163,74,.1);color:var(--gn)}.srbadge.p{background:var(--ord);color:var(--or)}.srbadge.s{background:var(--s3);color:var(--t3)}
+.danger-row{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:rgba(220,38,38,.06);border:.5px solid rgba(220,38,38,.2);border-radius:10px;margin:0 20px 5px;cursor:pointer}
+.dr-t{font-size:13px;font-weight:500;color:var(--re)}.dr-a{font-size:14px;color:var(--re)}
+.ver{text-align:center;padding:14px;font-size:11px;color:var(--t3)}
+
+/* ── MODAL ── */
+.modal-ov{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:flex-end;justify-content:center;max-width:390px;margin:0 auto}
+.modal-ov.open{display:flex}
+.modal{background:var(--s1);border-radius:16px 16px 0 0;padding:20px;width:100%;border-top:.5px solid var(--orb)}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:4px}
+.modal-sub{font-size:12px;color:var(--t2);margin-bottom:14px}
+.bio-icon{font-size:48px;text-align:center;margin-bottom:10px}
+.bio-btn{width:100%;background:var(--or);color:#fff;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:8px}
+.bio-cancel{width:100%;background:transparent;color:var(--t2);border:.5px solid var(--br);border-radius:12px;padding:11px;font-size:13px;font-family:inherit;cursor:pointer}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--gn);color:#fff;font-size:12px;font-weight:700;padding:8px 16px;border-radius:20px;display:none;z-index:300;white-space:nowrap;pointer-events:none}
+.toast.show{display:block;animation:tIn .2s ease}
+@keyframes tIn{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+</style>
+</head>
+<body>
+
+<!-- STATUS + NAV (hidden on onboarding) -->
+<div id="mainChrome">
+<div class="sbar"><span>9:41</span><div class="sbar-r"><span>●●●</span><span>WiFi</span><span>🔋</span></div></div>
+<div class="tnav">
+  <div class="brand"><div class="bi">J</div><div class="bn">Jax<span>Brain</span></div></div>
+  <div class="nav-acts">
+    <div class="nb" onclick="go('notif')"><span>🔔</span><div class="dot"></div></div>
+    <div class="nb" onclick="go('settings')">⚙️</div>
+  </div>
+</div>
+<div class="tabs" id="mainTabs">
+  <div class="tab on" onclick="go('home',this)">Home</div>
+  <div class="tab" onclick="go('cap',this)">Save</div>
+  <div class="tab" onclick="go('srch',this)">Search</div>
+  <div class="tab" onclick="go('ppl',this)">People</div>
+  <div class="tab" onclick="go('brain',this)">Brain</div>
+</div>
+</div>
+
+<!-- ═══ ONBOARDING ═══ -->
+<div class="scr" id="s-onboard">
+  <div class="step-dots" id="stepDots">
+    <div class="step-dot on" id="dot-0"></div>
+    <div class="step-dot" id="dot-1"></div>
+    <div class="step-dot" id="dot-2"></div>
+    <div class="step-dot" id="dot-3"></div>
+    <div class="step-dot" id="dot-4"></div>
+  </div>
+  <!-- STEP 0 -->
+  <div id="ob-0">
+    <div class="ob-splash">
+      <div class="ob-logo">J</div>
+      <div class="ob-title">Jax<span>Brain</span></div>
+      <div class="ob-sub">Your personal AI memory.<br>It remembers everything so you don't have to.</div>
+      <div class="ob-inv">You've been invited by <strong>Chris Jackson</strong></div>
+      <button class="ob-cta" onclick="nextStep(1)">Get started →</button>
+      <div class="ob-sec">Already have an account? Sign in</div>
+    </div>
+  </div>
+  <!-- STEP 1 -->
+  <div id="ob-1" style="display:none">
+    <div class="ob-step">
+      <span class="ob-icon">🧠</span>
+      <div class="ob-step-title">Your brain, but it never forgets</div>
+      <div class="ob-step-sub">JaxBrain captures your thoughts, meeting context, and relational intelligence — then surfaces exactly what you need before every call.</div>
+      <div class="ob-demo">
+        <div class="ob-demo-lbl">What others have saved</div>
+        <div class="demo-t"><div class="dt-row"><div class="dt-title">RBI Corp — relationship feel</div><div class="bx beq">Personal</div></div><div class="dt-body">Patrick cautiously engaged. Long memory of reactive support. Don't wing it with him.</div></div>
+        <div class="demo-t"><div class="dt-row"><div class="dt-title">Mighty Auto Parts — pipeline</div><div class="bx biq">Business</div></div><div class="dt-body">Quoted at $160K. Largest active deal. No champion contact identified yet — gap.</div></div>
+      </div>
+      <div class="ob-step-acts"><div class="ob-skip" onclick="nextStep(2)">Skip</div><button class="ob-next" onclick="nextStep(2)">That's interesting →</button></div>
+    </div>
+  </div>
+  <!-- STEP 2 -->
+  <div id="ob-2" style="display:none">
+    <div class="ob-step">
+      <span class="ob-icon">🔒</span>
+      <div class="ob-step-title">You control what's private</div>
+      <div class="ob-step-sub">Four privacy levels — you choose when you save. No one else ever sees your private or sacred thoughts.</div>
+      <div class="ob-demo">
+        <div class="ob-demo-lbl">The four levels</div>
+        <div class="demo-t" style="border-left:3px solid var(--or)"><div class="dt-row"><div class="dt-title">Open</div><div class="bx bt">T1</div></div><div class="dt-body">Business context. Any AI session can see it.</div></div>
+        <div class="demo-t" style="border-left:3px solid var(--bl)"><div class="dt-row"><div class="dt-title">Just me</div><div class="bx" style="background:rgba(37,99,235,.1);color:var(--bl)">T2</div></div><div class="dt-body">Personal habits, health. Only informs AI privately.</div></div>
+        <div class="demo-t" style="border-left:3px solid var(--pu)"><div class="dt-row"><div class="dt-title">Private</div><div class="bx beq">T3</div></div><div class="dt-body">Relationships. Requires Face ID to save.</div></div>
+        <div class="demo-t" style="border-left:3px solid var(--am)"><div class="dt-row"><div class="dt-title">Sacred</div><div class="bx" style="background:rgba(217,119,6,.1);color:var(--am)">T4</div></div><div class="dt-body">Core values. Write-only. AI uses silently — never shares.</div></div>
+      </div>
+      <div class="ob-step-acts"><div class="ob-skip" onclick="nextStep(3)">Skip</div><button class="ob-next" onclick="nextStep(3)">Got it →</button></div>
+    </div>
+  </div>
+  <!-- STEP 3 -->
+  <div id="ob-3" style="display:none">
+    <div class="ob-step">
+      <span class="ob-icon">🔗</span>
+      <div class="ob-step-title">Connect what you already use</div>
+      <div class="ob-step-sub">JaxBrain gets smarter when it can see your calendar. You can always connect these later.</div>
+      <div class="perm-card" id="perm-cal" onclick="grantPerm('cal')"><div class="perm-icon">📅</div><div class="perm-info"><div class="perm-title">Outlook Calendar</div><div class="perm-sub">Shows context for today's meetings</div></div><div class="perm-status off" id="ps-cal">Allow →</div></div>
+      <div class="perm-card" id="perm-not" onclick="grantPerm('not')"><div class="perm-icon">🔔</div><div class="perm-info"><div class="perm-title">Notifications</div><div class="perm-sub">Streak reminders, pre-call primers, weekly insights</div></div><div class="perm-status off" id="ps-not">Allow →</div></div>
+      <div class="perm-card" id="perm-fid" onclick="grantPerm('fid')"><div class="perm-icon">🔒</div><div class="perm-info"><div class="perm-title">Face ID</div><div class="perm-sub">Required to save Private and Sacred thoughts</div></div><div class="perm-status off" id="ps-fid">Allow →</div></div>
+      <div style="height:12px"></div>
+      <div class="ob-step-acts"><div class="ob-skip" onclick="nextStep(4)">Do this later</div><button class="ob-next" onclick="nextStep(4)">Continue →</button></div>
+    </div>
+  </div>
+  <!-- STEP 4 -->
+  <div id="ob-4" style="display:none">
+    <div class="ob-step">
+      <span class="ob-icon">✏️</span>
+      <div class="ob-step-title">Save your first thought</div>
+      <div class="ob-step-sub">Start with anything. The brain gets smarter as you use it — but it has to start somewhere.</div>
+      <div class="fc-prompts">
+        <div class="fc-prompt" onclick="fillP(this)">Something I decided today</div>
+        <div class="fc-prompt" onclick="fillP(this)">A deal I'm working on</div>
+        <div class="fc-prompt" onclick="fillP(this)">Someone I met recently</div>
+        <div class="fc-prompt" onclick="fillP(this)">A goal for this week</div>
+        <div class="fc-prompt" onclick="fillP(this)">How I'm feeling right now</div>
+      </div>
+      <textarea class="fc-input" id="firstCap" placeholder="Type anything — or tap a prompt above..."></textarea>
+      <div class="ob-step-acts"><div class="ob-skip" onclick="finishOnboard()">Skip for now</div><button class="ob-next" onclick="saveFirst()">Save to brain ⚡</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ HOME ═══ -->
+<div class="scr on" id="s-home">
+  <div class="greet">
+    <div class="gey">Good Morning</div>
+    <div class="gname">Chris <span>Jackson</span></div>
+    <div class="mb-banner" onclick="toggleMB()">
+      <div class="mb-row"><div class="mb-txt"><strong>5 meetings today</strong> · JaxBrain has context for 4</div><div class="mb-arr" id="mbarr">›</div></div>
+      <div class="mb-list" id="mblist">
+        <div class="mb-meeting"><div class="mb-dot found"></div><div class="mb-mn">RBI Corp — Weekly Check-in</div><div class="mb-mt">9:00 AM</div><div class="ctx-btn has" id="cb-rbi" onclick="event.stopPropagation();toggleDB('rbi')">Context ✓</div></div>
+        <div class="debrief" id="db-rbi"><div class="db-hdr"><div class="db-hdr-t">RBI Corp — Brief</div><div class="db-hdr-c" onclick="closeDB('rbi')">✕</div></div><div class="db-body"><div class="db-sec"><div class="db-sec-t">📋 Where things stand</div><div class="db-fact">CEP pitch delivered. <strong>Patrick and Will receptive.</strong> Josefina scheduling discovery + Darren onsite.</div><div class="db-fact"><strong>Blind Shipping HIGH</strong> — 3rd iteration. Packing Slip BO in progress.</div></div><div class="db-sec"><div class="db-sec-t">🌡️ Relationship feel</div><div class="db-fact" style="color:#eab308">⚠️ <strong>Cautiously engaged.</strong> Long memory. Don't wing it.</div></div><div class="db-sec"><div class="db-sec-t">💡 Opening move</div><div class="db-tp">Lead with Darren onsite timing — not open tickets.</div></div><div class="db-acts"><button class="db-btn p" onclick="go('primer')">Full brief ↗</button><button class="db-btn s" onclick="closeDB('rbi')">Got it</button></div></div></div>
+        <div class="mb-meeting"><div class="mb-dot found"></div><div class="mb-mn">Trilogy Labs Follow-up</div><div class="mb-mt">10:30 AM</div><div class="ctx-btn has" id="cb-tril" onclick="event.stopPropagation();toggleDB('tril')">Context ✓</div></div>
+        <div class="debrief" id="db-tril"><div class="db-hdr"><div class="db-hdr-t">Trilogy Labs — Brief</div><div class="db-hdr-c" onclick="closeDB('tril')">✕</div></div><div class="db-body"><div class="db-sec"><div class="db-sec-t">📋 Where things stand</div><div class="db-fact">Cosmetics. <strong>Strong fit.</strong> Owner on 3-4yr exit. Asset not liability pitch landed.</div></div><div class="db-sec"><div class="db-sec-t">🌡️ Relationship feel</div><div class="db-fact" style="color:var(--gn)">✅ <strong>Warm and curious.</strong> No red flags.</div></div><div class="db-sec"><div class="db-sec-t">💡 Opening move</div><div class="db-tp">Ask if the owner has been looped in yet — that closes this deal.</div></div><div class="db-acts"><button class="db-btn p" onclick="go('primer')">Full brief ↗</button><button class="db-btn s" onclick="closeDB('tril')">Got it</button></div></div></div>
+        <div class="mb-meeting"><div class="mb-dot found"></div><div class="mb-mn">GMT CEP Discovery</div><div class="mb-mt">1:00 PM</div><div class="ctx-btn has" id="cb-gmt" onclick="event.stopPropagation();toggleDB('gmt')">Context ✓</div></div>
+        <div class="debrief" id="db-gmt"><div class="db-hdr"><div class="db-hdr-t">GMT CEP — Brief</div><div class="db-hdr-c" onclick="closeDB('gmt')">✕</div></div><div class="db-body"><div class="db-sec"><div class="db-sec-t">📋 Where things stand</div><div class="db-fact">Pipeline — <strong>Quote Needed.</strong> $60K+ subscription. Discovery call today.</div></div><div class="db-sec"><div class="db-sec-t">💡 Opening move</div><div class="db-tp">Use RBI CEP Warning Signs as your diagnostic — how many patterns match?</div></div><div class="db-acts"><button class="db-btn p" onclick="go('primer')">Full brief ↗</button><button class="db-btn s" onclick="closeDB('gmt')">Got it</button></div></div></div>
+        <div class="mb-meeting"><div class="mb-dot found"></div><div class="mb-mn">Gilmer Budget Review</div><div class="mb-mt">2:30 PM</div><div class="ctx-btn has" id="cb-gil" onclick="event.stopPropagation();toggleDB('gil')">Context ✓</div></div>
+        <div class="debrief" id="db-gil"><div class="db-hdr"><div class="db-hdr-t">Gilmer Budget Review</div><div class="db-hdr-c" onclick="closeDB('gil')">✕</div></div><div class="db-body"><div class="db-sec"><div class="db-sec-t">📋 Where things stand</div><div class="db-fact">Budget overrun. Fix: <strong>Schedule A addendums A1/A2/A3.</strong> $79K budget, ~150hrs burned.</div></div><div class="db-sec"><div class="db-sec-t">💡 Opening move</div><div class="db-tp">Lead with the Schedule A fix — not the overage numbers.</div></div><div class="db-acts"><button class="db-btn p" onclick="go('primer')">Full brief ↗</button><button class="db-btn s" onclick="closeDB('gil')">Got it</button></div></div></div>
+        <div class="mb-meeting"><div class="mb-dot none"></div><div class="mb-mn">Vendor Call — Unknown</div><div class="mb-mt">4:00 PM</div><div class="ctx-btn no">No context</div></div>
+      </div>
+    </div>
+    <div class="streak-inline"><div class="si-l"><div class="si-n">6🔥</div><div><div class="si-lb">day streak</div><div class="si-sb">Best: 12 days</div></div></div><div class="si-days"><div class="sd done">M</div><div class="sd done">T</div><div class="sd done">W</div><div class="sd done">T</div><div class="sd done">F</div><div class="sd done">S</div><div class="sd today">S</div></div></div>
+    <div class="health-row">
+      <div class="ring-wrap"><svg width="52" height="52" viewBox="0 0 52 52"><circle cx="26" cy="26" r="21" fill="none" stroke="#28282f" stroke-width="5"/><circle cx="26" cy="26" r="21" fill="none" stroke="#e85d04" stroke-width="5" stroke-dasharray="131.9" stroke-dashoffset="34.3" stroke-linecap="round"/></svg><div class="ring-score">74</div></div>
+      <div class="hdims">
+        <div class="hdim"><div class="hd-row"><span class="hdn">Last captured</span><span class="hdp" style="color:#16a34a">Today ✓</span></div><div class="hdt"><div class="hdf" style="width:95%;background:#16a34a"></div></div></div>
+        <div class="hdim"><div class="hd-row"><span class="hdn">Business vs personal</span><span class="hdp" style="color:#d97706">Skewed</span></div><div class="hdt"><div class="hdf" style="width:55%;background:#d97706"></div></div></div>
+        <div class="hdim"><div class="hd-row"><span class="hdn">People noted</span><span class="hdp" style="color:#2563eb">Good</span></div><div class="hdt"><div class="hdf" style="width:80%;background:#2563eb"></div></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="qcap" onclick="go('cap')"><div class="qci">✏️</div><div class="qcm"><div class="qcmt">Save a Thought</div><div class="qcms">Tap to capture something worth remembering</div></div><div class="qca">›</div></div>
+  <div class="shd"><div class="stl">Recent Thoughts</div><div class="slk" onclick="go('srch')">See all</div></div>
+  <div class="tc iq" onclick="go('detail')"><div class="tct"><div class="tctitle">RBI Corp — CEP Discussion</div><div class="tcbw"><div class="bx bt">T1</div><div class="bx biq">Business</div></div></div><div class="tcbody">Patrick and Will receptive. CEP pitch landed. Josefina scheduling discovery + Darren onsite.</div><div class="tcft"><div class="tctags"><div class="tctag">Client</div><div class="tctag">CEP</div></div><div class="tctime">2d ago</div></div></div>
+  <div class="tc eq" onclick="go('detail')"><div class="tct"><div class="tctitle">RBI — Relationship Feel</div><div class="tcbw"><div class="bx bt">T3</div><div class="bx beq">Personal</div></div></div><div class="tcbody">Patrick cautiously engaged. Long memory of reactive support. Prepare carefully.</div><div class="tcft"><div class="tctags"><div class="tctag">Relational</div></div><div class="tctime">2d ago</div></div></div>
+  <div class="tc iq" onclick="go('detail')"><div class="tct"><div class="tctitle">Trilogy Labs First Call</div><div class="tcbw"><div class="bx bt">T1</div><div class="bx biq">Business</div></div></div><div class="tcbody">Cosmetics, strong fit. Owner on 3-4yr exit. Asset not liability pitch landed.</div><div class="tcft"><div class="tctags"><div class="tctag">Prospect</div></div><div class="tctime">3d ago</div></div></div>
+  <div class="shd" style="margin-top:4px"><div class="stl">Active Pipeline</div><div style="display:flex;align-items:center;gap:6px"><span style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;background:rgba(255,122,0,.1);border:.5px solid rgba(255,122,0,.3);color:#ff7a00">HubSpot →</span><div class="slk">$528K+</div></div></div>
+  <div class="pipe-scroll">
+    <div class="pc"><div class="pcs q">● Quoted</div><div class="pcn">Mighty Auto Parts</div><div class="pcv">$160K</div><div class="pcvl">Total value</div><div class="pc-src">📊 HubSpot · 2h ago</div></div>
+    <div class="pc"><div class="pcs q">● Quoted</div><div class="pcn">Pacific Northern</div><div class="pcv">$90K</div><div class="pcvl">Total value</div><div class="pc-src">📊 HubSpot · 1d ago</div></div>
+    <div class="pc"><div class="pcs n">● Quote Needed</div><div class="pcn">GMT CEP</div><div class="pcv">$60K+</div><div class="pcvl">Subscription</div><div class="pc-src">📊 HubSpot · 3h ago</div></div>
+    <div class="pc"><div class="pcs n">● Quote Needed</div><div class="pcn">HyVee/FDI</div><div class="pcv">$60K+</div><div class="pcvl">Subscription</div><div class="pc-src">📋 Manual · Mar 21</div></div>
+    <div class="pc"><div class="pcs d">● Discovery</div><div class="pcn">HH CEP</div><div class="pcv">$36K+</div><div class="pcvl">Subscription</div><div class="pc-src">📋 Manual · Mar 21</div></div>
+  </div>
+  <div class="pad"></div>
+</div>
+
+<!-- ═══ SAVE ═══ -->
+<div class="scr" id="s-cap">
+<div class="cap-wrap">
+  <div class="cap-title">Save a Thought</div>
+  <div class="cap-sub">Say it or type it — your brain remembers it.</div>
+  <div class="cap-iw">
+    <textarea class="cap-in" id="capTxt" placeholder="What happened? What did you decide? What do you want to remember?"></textarea>
+    <div class="mic-btn" id="micBtn" onclick="toggleMic()">🎤</div>
+  </div>
+  <div class="mic-st" id="micSt"></div>
+  <div class="cap-opts">
+    <div class="co"><div class="col">What kind?</div><div class="cops"><button class="cop on" onclick="pp(this,'dim')">Business</button><button class="cop" onclick="pp(this,'dim')">Personal</button><button class="cop" onclick="pp(this,'dim')">Both</button></div></div>
+    <div class="co"><div class="col">Who can see it?</div><div class="cops"><button class="tier-btn on" onclick="pickTier(1,this)">Open</button><button class="tier-btn" onclick="pickTier(2,this)">Just me</button><button class="tier-btn" onclick="pickTier(3,this)">🔒 Private</button><button class="tier-btn" onclick="pickTier(4,this)">🔒 Sacred</button></div><div class="tier-lk" id="tierLk">🔒 Face ID required to save</div></div>
+    <div class="co"><div class="col">Type <span class="col-tip" onclick="toggleTH()">? help</span></div><div class="cops"><button class="cop on" onclick="pp(this,'type')">Obs</button><button class="cop" onclick="pp(this,'type')">Task</button><button class="cop" onclick="pp(this,'type')">Idea</button><button class="cop" onclick="pp(this,'type')">Ref</button></div></div>
+    <div class="co"><div class="col">Tag a person?</div><div class="cops"><button class="cop" onclick="togglePP()">+ Add person</button></div></div>
+  </div>
+  <div class="type-help" id="typeHelp"><div class="te"><div class="te-t">Obs</div><div class="te-d">Something that happened or you noticed</div></div><div class="te"><div class="te-t">Task</div><div class="te-d">Action item — someone needs to do something</div></div><div class="te"><div class="te-t">Idea</div><div class="te-d">A strategic or creative thought</div></div><div class="te"><div class="te-t">Ref</div><div class="te-d">Reference data — numbers, specs, pipeline</div></div></div>
+  <div class="pp-wrap" id="ppWrap"><input class="pp-search" type="text" placeholder="Search people..."/><div class="pp-list"><div class="pp-p" onclick="tagP(this)">Patrick Ferguson</div><div class="pp-p" onclick="tagP(this)">Diane Cawley</div><div class="pp-p" onclick="tagP(this)">James Cawley</div><div class="pp-p" onclick="tagP(this)">Abby Wilbanks</div><div class="pp-p" onclick="tagP(this)">Darren Foland</div><div class="pp-p" onclick="tagP(this)">Josefina Palacio</div><div class="pp-p" onclick="tagP(this)">Tanner Mussomeli</div></div></div>
+  <button class="cap-btn" onclick="trySave()">⚡ Save to Brain</button>
+</div>
+<div class="pad"></div>
+</div>
+
+<!-- ═══ SEARCH ═══ -->
+<div class="scr" id="s-srch">
+<div class="srch-wrap">
+  <div class="cap-title">Search Brain</div>
+  <div class="cap-sub">Searches by meaning, not just keywords</div>
+  <div class="srch-bar"><div class="srch-ic">🔍</div><input type="text" placeholder="Try: what do I know about Patrick Ferguson?"/></div>
+  <div class="fpills"><div class="fp on">Everything</div><div class="fp" onclick="sfp(this)">Business</div><div class="fp" onclick="sfp(this)">Personal</div><div class="fp" onclick="sfp(this)">Open</div><div class="fp" onclick="sfp(this)">Clients</div><div class="fp" onclick="sfp(this)">Pipeline</div><div class="fp" onclick="sfp(this)">People</div><div class="fp" onclick="sfp(this)">Ideas</div></div>
+</div>
+  <div class="tc iq" onclick="go('detail')"><div class="tct"><div class="tctitle">Four-Tier Privacy System</div><div class="tcbw"><div class="bx bt">Open</div><div class="bx biq">Business</div></div></div><div class="tcbody">Open, Just Me, Private, Sacred. Privacy enforced at database level on save.</div><div class="tcft"><div class="tctags"><div class="tctag">Architecture</div></div><div class="tctime">Today</div></div></div>
+  <div class="tc iq" onclick="go('detail')"><div class="tct"><div class="tctitle">Morning Briefing — Waiting on Azure</div><div class="tcbw"><div class="bx bt">Open</div><div class="bx biq">Business</div></div></div><div class="tcbody">Marcus Networking manages M365 tenant. Contact Monday for Azure app registration.</div><div class="tcft"><div class="tctags"><div class="tctag">Action</div><div class="tctag">Azure</div></div><div class="tctime">2d ago</div></div></div>
+  <div class="tc eq" onclick="go('detail')"><div class="tct"><div class="tctitle">JANE — The Long Game</div><div class="tcbw"><div class="bx bt">Just me</div><div class="bx beq">Personal</div></div></div><div class="tcbody">Individual brains, shared namespace. Optimize for relationship wins. Phase 2/3.</div><div class="tcft"><div class="tctags"><div class="tctag">Vision</div></div><div class="tctime">3d ago</div></div></div>
+<div class="pad"></div>
+</div>
+
+<!-- ═══ PEOPLE ═══ -->
+<div class="scr" id="s-ppl">
+  <div class="shd" style="padding-top:4px"><div class="stl">Your Team</div><div class="slk">9 people</div></div>
+  <div class="pcard"><div class="pav" style="background:#7c3aed">DC</div><div class="pinfo"><div class="pname">Diane Cawley</div><div class="prole">Chief Software Architect</div></div><div class="pbadge" style="background:var(--ord);color:var(--or)">KEY</div></div>
+  <div class="pcard"><div class="pav" style="background:#1e3a5f">JC</div><div class="pinfo"><div class="pname">James Cawley</div><div class="prole">Support Manager</div></div><div class="pbadge" style="background:var(--ord);color:var(--or)">KEY</div></div>
+  <div class="pcard"><div class="pav" style="background:#1a3a2a">AW</div><div class="pinfo"><div class="pname">Abby Wilbanks</div><div class="prole">Business Development</div></div><div class="pbadge" style="background:rgba(37,99,235,.1);color:#2563eb">BIZ</div></div>
+  <div class="pcard"><div class="pav" style="background:#3a2a1a">DF</div><div class="pinfo"><div class="pname">Darren Foland</div><div class="prole">Solutions Architect</div></div><div class="pbadge" style="background:rgba(22,163,74,.1);color:#16a34a">CEP</div></div>
+  <div class="pcard"><div class="pav" style="background:#2a1a3a">JP</div><div class="pinfo"><div class="pname">Josefina Palacio</div><div class="prole">Customer Success Manager</div></div><div class="pbadge" style="background:rgba(22,163,74,.1);color:#16a34a">CEP</div></div>
+  <div class="shd" style="margin-top:10px"><div class="stl">Clients & Prospects</div><div class="slk">+ Add</div></div>
+  <div class="pcard"><div class="pav" style="background:#1e3a5f">PF</div><div class="pinfo"><div class="pname">Patrick Ferguson</div><div class="prole">RBI Corp · CEP Client</div></div><div class="pbadge" style="background:rgba(249,115,22,.1);color:#f97316">HOT</div></div>
+  <div class="pcard"><div class="pav" style="background:#1a3a2a">TM</div><div class="pinfo"><div class="pname">Tanner Mussomeli</div><div class="prole">Trilogy Labs · Prospect</div></div><div class="pbadge" style="background:rgba(22,163,74,.1);color:#16a34a">NEW</div></div>
+  <div class="pad"></div>
+</div>
+
+<!-- ═══ BRAIN ═══ -->
+<div class="scr" id="s-brain">
+<div class="brain-wrap"><div class="brain-title">Your Brain</div><div class="brain-sub">How you think, mapped.</div></div>
+<div class="streak-card">
+  <div class="streak-top"><div class="streak-big"><div class="streak-num">6</div><div class="streak-unit">🔥 day streak</div></div><div class="streak-best">Best: 12 days</div></div>
+  <div class="streak-week"><div class="sw"><div class="sw-b done">M</div><div class="sw-d">18</div></div><div class="sw"><div class="sw-b done">T</div><div class="sw-d">19</div></div><div class="sw"><div class="sw-b done">W</div><div class="sw-d">20</div></div><div class="sw"><div class="sw-b done">T</div><div class="sw-d">21</div></div><div class="sw"><div class="sw-b done">F</div><div class="sw-d">22</div></div><div class="sw"><div class="sw-b done">S</div><div class="sw-d">23</div></div><div class="sw"><div class="sw-b today">S</div><div class="sw-d">Today</div></div></div>
+  <div class="streak-msg">Save something today to keep your streak. 143 total thoughts.</div>
+</div>
+<div class="hcard">
+  <div class="hc-top"><div class="hring"><svg width="72" height="72" viewBox="0 0 72 72"><circle cx="36" cy="36" r="30" fill="none" stroke="#28282f" stroke-width="7"/><circle cx="36" cy="36" r="30" fill="none" stroke="#e85d04" stroke-width="7" stroke-dasharray="188.5" stroke-dashoffset="49" stroke-linecap="round"/></svg><div class="hring-score"><div class="hring-num">74</div><div class="hring-lbl">health</div></div></div><div class="hc-right"><div class="hc-title">Brain Health</div><div class="hc-sub">Business vs personal balance is off. Add personal thoughts to break 80.</div></div></div>
+  <div class="hcd"><div class="hcd-row"><span class="hcd-name">Last captured</span><span class="hcd-pct" style="color:#16a34a">Today ✓</span></div><div class="hcd-track"><div class="hcd-fill" style="width:95%;background:#16a34a"></div></div></div>
+  <div class="hcd"><div class="hcd-row"><span class="hcd-name">Business vs personal</span><span class="hcd-pct" style="color:#d97706">Off balance</span></div><div class="hcd-track"><div class="hcd-fill" style="width:55%;background:#d97706"></div></div></div>
+  <div class="hcd"><div class="hcd-row"><span class="hcd-name">People noted</span><span class="hcd-pct" style="color:#2563eb">Good</span></div><div class="hcd-track"><div class="hcd-fill" style="width:80%;background:#2563eb"></div></div></div>
+  <div class="hcd"><div class="hcd-row"><span class="hcd-name">Privacy range used</span><span class="hcd-pct" style="color:#7c3aed">Getting there</span></div><div class="hcd-track"><div class="hcd-fill" style="width:65%;background:#7c3aed"></div></div></div>
+  <div class="hcd"><div class="hcd-row"><span class="hcd-name">Detail level</span><span class="hcd-pct" style="color:#e85d04">Strong</span></div><div class="hcd-track"><div class="hcd-fill" style="width:76%;background:#e85d04"></div></div></div>
+  <div class="hc-tip">Save 3 personal thoughts today → brain health climbs to 78.</div>
+</div>
+<div class="badge-card">
+  <div class="shd" style="padding:0 0 9px"><div class="stl">Achievements</div><div class="slk">9 of 13 earned</div></div>
+  <div class="badge-grid">
+    <div class="badg badg-new"><div class="badg-c e">✏️</div><div class="badg-n">First save</div></div>
+    <div class="badg"><div class="badg-c e">🔥</div><div class="badg-n">7-day streak</div></div>
+    <div class="badg"><div class="badg-c e">👥</div><div class="badg-n">Team mapped</div></div>
+    <div class="badg"><div class="badg-c e">💼</div><div class="badg-n">50 thoughts</div></div>
+    <div class="badg"><div class="badg-c e">🎭</div><div class="badg-n">First personal</div></div>
+    <div class="badg"><div class="badg-c e">🔍</div><div class="badg-n">First search</div></div>
+    <div class="badg"><div class="badg-c e">📊</div><div class="badg-n">Pipeline in</div></div>
+    <div class="badg"><div class="badg-c e">📞</div><div class="badg-n">Pre-call pro</div></div>
+    <div class="badg"><div class="badg-c e">🏗️</div><div class="badg-n">All 4 levels</div></div>
+    <div class="badg"><div class="badg-c lk">🧠</div><div class="badg-n">100 thoughts</div></div>
+    <div class="badg"><div class="badg-c lk">📈</div><div class="badg-n">Health 80+</div></div>
+    <div class="badg"><div class="badg-c lk ep">🔒</div><div class="badg-n">Sacred save</div></div>
+    <div class="badg"><div class="badg-c lk ep">💎</div><div class="badg-n">Perfect brain</div></div>
+  </div>
+</div>
+<div class="graph-card">
+  <div class="gc-top"><div class="gc-lbl">Thought Graph</div><div class="gc-ct" id="gcct">35 visible</div></div>
+  <div class="gfpills"><div class="gfp on" onclick="gfilt('all',this)">All</div><div class="gfp" onclick="gfilt('iq',this)">Business</div><div class="gfp" onclick="gfilt('eq',this)">Personal</div><div class="gfp" onclick="gfilt('ref',this)">Refs</div><div class="gfp" onclick="gfilt('people',this)">People</div><div class="gfp" onclick="gfilt('ideas',this)">Ideas</div></div>
+  <div class="gsrch"><input id="gsIn" type="text" placeholder="Search to highlight..." oninput="gsearch(this.value)"/><button class="gsrch-btn" onclick="gsearch(document.getElementById('gsIn').value)">Find</button></div>
+  <div class="gclusters"><div class="gclp on" onclick="gcluster('rbi',this)">RBI Corp</div><div class="gclp" onclick="gcluster('pipeline',this)">Pipeline</div><div class="gclp" onclick="gcluster('jaxbrain',this)">JaxBrain</div><div class="gclp" onclick="gcluster('health',this)">Health</div><div class="gclp" onclick="gcluster('team',this)">Team</div><div class="gclp" onclick="gcluster('jane',this)">JANE</div></div>
+  <canvas id="gc" height="200"></canvas>
+  <div class="graph-hint">Tap any node to preview · Clusters pull by topic</div>
+  <div class="gtime"><div class="gtime-row"><span>Mar 21</span><span id="gtlbl">All 4 days</span><span>Today</span></div><input type="range" min="0" max="4" value="4" step="1" oninput="gscrub(this.value)"/></div>
+  <div class="gstats"><div class="gsb"><div class="gsb-n" id="gs-vis" style="color:#e85d04">35</div><div class="gsb-l">Visible</div></div><div class="gsb"><div class="gsb-n" id="gs-con" style="color:#7c3aed">94</div><div class="gsb-l">Connections</div></div><div class="gsb"><div class="gsb-n" id="gs-clst" style="color:#2563eb">6</div><div class="gsb-l">Clusters</div></div><div class="gsb"><div class="gsb-n" id="gs-sel" style="color:#16a34a">—</div><div class="gsb-l">Selected</div></div></div>
+  <div class="gc-legend"><div class="gl"><div class="gl-dot" style="background:#e85d04"></div><div class="gl-lbl">Business</div></div><div class="gl"><div class="gl-dot" style="background:#7c3aed"></div><div class="gl-lbl">Personal</div></div><div class="gl"><div class="gl-dot" style="background:#2563eb"></div><div class="gl-lbl">Ref</div></div><div class="gl"><div class="gl-dot" style="background:#16a34a"></div><div class="gl-lbl">People</div></div><div class="gl"><div class="gl-dot" style="background:#d97706"></div><div class="gl-lbl">Idea</div></div></div>
+</div>
+<div class="gnp" id="gnp"><div class="gnp-top"><div class="gnp-title" id="gnp-t"></div><div class="gnp-badges" id="gnp-b"></div></div><div class="gnp-body" id="gnp-bd"></div><div class="gnp-ft"><div class="gnp-tags" id="gnp-tg"></div><div class="gnp-time" id="gnp-tm"></div></div><span class="gnp-close" onclick="closeGNP()">✕ Close · tap another node</span></div>
+<div class="iqeq"><div class="stl" style="margin-bottom:9px">Business vs Personal</div><div class="dr"><div class="dl" style="color:#e85d04">Business</div><div class="dtr"><div class="df" style="width:78%;background:#e85d04"></div></div><div class="dp" style="color:#e85d04">78%</div></div><div class="dr"><div class="dl" style="color:#7c3aed">Personal</div><div class="dtr"><div class="df" style="width:22%;background:#7c3aed"></div></div><div class="dp" style="color:#7c3aed">22%</div></div><div class="dn">High performers trend toward 60/40. Add personal thoughts to close the gap.</div></div>
+<div class="shd"><div class="stl">Top Topics</div></div>
+<div class="tcloud"><div class="tp hot">JaxBrain</div><div class="tp hot">Savant Software</div><div class="tp hot">RBI Corp</div><div class="tp">Product Development</div><div class="tp">AI adoption</div><div class="tp">WMS</div><div class="tp">Pipeline</div><div class="tp">CEP</div></div>
+<div class="grow-card"><div class="stl">Brain Growth</div><div class="gbars"><div class="gb"><div class="gbn">58</div><div class="gbb" style="height:48px;background:#e85d04;opacity:.5"></div><div class="gbd">21</div></div><div class="gb"><div class="gbn">47</div><div class="gbb" style="height:38px;background:#e85d04;opacity:.7"></div><div class="gbd">22</div></div><div class="gb"><div class="gbn">8</div><div class="gbb" style="height:7px;background:#e85d04;opacity:.5"></div><div class="gbd">23</div></div><div class="gb"><div class="gbn">19</div><div class="gbb" style="height:17px;background:#e85d04"></div><div class="gbd">Today</div></div></div><div class="gwn">143 thoughts in 4 days. 1,000+ by mid-April at this pace.</div></div>
+<div style="padding:0 20px"><button style="width:100%;background:var(--s1);border:.5px solid var(--orb);border-radius:12px;padding:13px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;color:var(--or)" onclick="go('insight')">💡 View Weekly Brain Insight →</button></div>
+<div class="pad"></div>
+</div>
+
+<!-- ═══ PRE-CALL PRIMER ═══ -->
+<div class="scr" id="s-primer">
+  <div class="topbar"><div class="back" onclick="go('home')">←</div><div class="tb-info"><div class="tb-ey">Pre-Call Primer</div><div class="tb-title">RBI Corp — Weekly Check-in</div><div class="tb-sub" id="countdown-sub">Starts in 4:00</div></div><div class="tb-acts"><div class="tba" onclick="toast('Brief shared ✓')">↑</div><div class="tba" onclick="go('cap')">✏️</div></div></div>
+  <div class="mt-card"><div class="mt-row"><div class="mt-l"><div class="mt-av" style="background:#1e3a5f">PF</div><div><div class="mt-name">Patrick Ferguson</div><div class="mt-att">+ Will · RBI Corp · Teams call</div></div></div><div class="mt-r"><div class="mt-time" id="countdown">4:00</div><div class="mt-lbl">until start</div></div></div><div class="mt-prog"><div class="mt-fill"></div></div></div>
+  <div class="switcher"><div class="sw-pill on">RBI 9AM</div><div class="sw-pill" onclick="toast('Switching to Trilogy primer...')">Trilogy 10:30</div><div class="sw-pill" onclick="toast('Switching to GMT primer...')">GMT 1PM</div><div class="sw-pill" onclick="toast('Switching to Gilmer primer...')">Gilmer 2:30</div><div class="sw-pill" style="color:var(--t3)">Vendor ✕</div></div>
+  <div class="primer-sec"><div class="primer-sec-t">👥 Who's in the room</div></div>
+  <div class="ppl-strip">
+    <div class="ps-p"><div class="ps-av linked" style="background:#1e3a5f">PF<div class="ps-dot">✓</div></div><div class="ps-name">Patrick Ferguson</div></div>
+    <div class="ps-p"><div class="ps-av" style="background:#2a2a3a">W</div><div class="ps-name">Will</div></div>
+    <div class="ps-p"><div class="ps-av linked" style="background:#2a1a3a">JP<div class="ps-dot">✓</div></div><div class="ps-name">Josefina</div></div>
+    <div class="ps-p"><div class="ps-av linked" style="background:#1e3a5f">JC<div class="ps-dot">✓</div></div><div class="ps-name">James</div></div>
+    <div class="ps-p"><div class="ps-av linked" style="background:#3a2a1a">DF<div class="ps-dot">✓</div></div><div class="ps-name">Darren</div></div>
+  </div>
+  <div style="font-size:10px;color:var(--t3);padding:0 20px;margin-bottom:10px">Orange dot = JaxBrain has notes on this person</div>
+  <div class="primer-sec"><div class="primer-sec-t">🌡️ Relationship feel</div></div>
+  <div class="temp-pill caution">⚠️ Cautiously engaged — handle with care</div>
+  <div class="fact-card eq"><div class="fc-lbl eq">Personal context</div><div class="fc-text">Patrick has a <strong>long memory of reactive support.</strong> He responds well to structure and specificity. Will is more open — if the room feels tense, address Will directly to reset the energy.</div></div>
+  <div class="primer-sec" style="margin-top:6px"><div class="primer-sec-t">📋 Where things stand</div></div>
+  <div class="fact-card iq"><div class="fc-lbl iq">Last interaction — Mar 20</div><div class="fc-text">CEP pitch delivered. <strong>Patrick and Will both receptive.</strong> Josefina scheduling discovery. Darren onsite to follow. Patrick building comprehensive test environment.</div></div>
+  <div class="fact-card warn"><div class="fc-lbl warn">What they committed to</div><div class="fc-text">Discovery before onsite. <strong>Check: has Josefina scheduled the discovery session yet?</strong> If not — this is your first agenda item.</div></div>
+  <div class="primer-sec" style="margin-top:6px"><div class="primer-sec-t">⚠️ Open dev items</div></div>
+  <div class="oi"><div class="oi-dot high"></div><div class="oi-text"><div class="oi-title">Blind Shipping</div><div class="oi-sub">Carrier labels · 3rd iteration · scope drift history</div></div><div class="oi-badge high">HIGH</div></div>
+  <div class="oi"><div class="oi-dot mid"></div><div class="oi-text"><div class="oi-title">Packing Slip BO</div><div class="oi-sub">Data refactoring · rebuild needed · scope being defined</div></div><div class="oi-badge mid">IN PROGRESS</div></div>
+  <div class="oi"><div class="oi-dot mid"></div><div class="oi-text"><div class="oi-title">Blade Packing Screen</div><div class="oi-sub">Efficiency improvement · rolled back · pending redeploy</div></div><div class="oi-badge mid">PENDING</div></div>
+  <div class="primer-sec" style="margin-top:6px"><div class="primer-sec-t">📊 Support at a glance</div></div>
+  <div class="stats-row"><div class="stat-mini"><div class="sm-num" style="color:var(--or)">16.5</div><div class="sm-label">avg tickets / mo</div></div><div class="stat-mini"><div class="sm-num" style="color:var(--am)">9.9</div><div class="sm-label">avg hours / mo</div></div><div class="stat-mini"><div class="sm-num" style="color:var(--gn)">$2,407</div><div class="sm-label">avg monthly spend</div></div></div>
+  <div class="primer-sec" style="margin-top:6px"><div class="primer-sec-t">💡 Your opening move</div></div>
+  <div class="talking-pt"><div class="tp-lbl">💡 JaxBrain recommends</div><div class="tp-text">Lead with the CEP team structure and Darren onsite timing — not the open tickets.</div><div class="tp-sub">Patrick needs to see a <strong>plan</strong>, not a status update. Open with who's coming and when — then let him bring up the tickets.</div></div>
+  <div class="fact-card action"><div class="fc-lbl action">After the call</div><div class="fc-text">JaxBrain will remind you 5 minutes after this call ends. One tap to capture what happened, what changed, and what you committed to.</div></div>
+  <div class="act-row"><div class="act-btn primary" onclick="sendPrompt('Give me a complete pre-call primer for my RBI Corp meeting today with Patrick Ferguson')">Full brief from brain ↗</div><div class="act-btn secondary" onclick="toast('Joining Teams call...')">Join call →</div></div>
+  <div class="pad"></div>
+</div>
+
+<!-- ═══ WEEKLY INSIGHT ═══ -->
+<div class="scr" id="s-insight">
+  <div class="topbar"><div class="back" onclick="go('brain')">←</div><div class="tb-info"><div class="tb-ey">Weekly Brain Insight</div><div class="tb-title">Your Week in Review</div><div style="font-size:11px;color:var(--t3);margin-top:1px">Week of Mar 18–24, 2026</div></div><div class="tb-acts"><div class="tba" onclick="toast('Insight shared ✓')">↑</div></div></div>
+  <div class="insight-hero"><div class="ih-week">Week of Mar 18 – 24, 2026</div><div class="ih-hl">Your brain grew by <span>143 thoughts</span> this week.</div><div class="ih-sub">JaxBrain analyzed everything you captured and found 5 patterns worth your attention — including one you probably didn't notice.</div><div class="ih-stats"><div class="ihs"><div class="ihs-n">143</div><div class="ihs-l">thoughts</div></div><div class="ihs"><div class="ihs-n">9</div><div class="ihs-l">people noted</div></div><div class="ihs"><div class="ihs-n">6</div><div class="ihs-l">streak days</div></div><div class="ihs"><div class="ihs-n">5</div><div class="ihs-l">insights</div></div></div></div>
+  <div class="shd" style="margin-top:4px"><div class="stl">What your brain noticed</div></div>
+  <div class="insight-card ic-pattern" onclick="sendPrompt('Tell me more about the RBI Corp pattern in my brain this week')"><div class="ic-hdr"><div class="ic-iw">🔁</div><div class="ic-top"><div class="ic-type">Pattern detected</div><div class="ic-title">RBI Corp appeared in 6 separate captures — more than any other client</div></div></div><div class="ic-body">Most were business (IQ) captures about CEP, open dev items, and support data. But your one EQ capture about Patrick's relationship temperature is likely the most important of the six. Use it before every call.</div><div class="ic-action"><div class="ia-t">Pull RBI pre-call primer →</div><div class="ia-a">›</div></div></div>
+  <div class="insight-card ic-eq" onclick="sendPrompt('What does my brain say about my business vs personal balance this week?')"><div class="ic-hdr"><div class="ic-iw">🎭</div><div class="ic-top"><div class="ic-type">Personal balance flag</div><div class="ic-title">78% of your captures are business. Only 22% are personal.</div></div></div><div class="ic-body">High performers who get the most from JaxBrain tend to run closer to 60/40. Your brain is doing excellent business work — but it knows almost nothing about how you're actually feeling this week. The personal layer is what makes the brain irreplaceable.</div><div class="ic-action"><div class="ia-t">Add a personal thought →</div><div class="ia-a">›</div></div></div>
+  <div class="insight-card ic-cel"><div class="ic-hdr"><div class="ic-iw">🏆</div><div class="ic-top"><div class="ic-type">Achievement unlocked</div><div class="ic-title">You built the most complete team roster your brain has ever seen</div></div></div><div class="ic-body">Person notes on all 9 core Savant team members — first time ever. Your brain now knows who owns what, who's underwater, and who's a single point of failure. That's operational intelligence.</div><div class="ic-action"><div class="ia-t">View team notes →</div><div class="ia-a">›</div></div></div>
+  <div class="insight-card ic-flag" onclick="sendPrompt('Tell me about the AI adoption gap pattern I captured this week')"><div class="ic-hdr"><div class="ic-iw">⚠️</div><div class="ic-top"><div class="ic-type">Pattern worth watching</div><div class="ic-title">The same problem showed up in 3 different calls this week</div></div></div><div class="ic-body">Gilmer (budget overrun), Project Genesis (Ashwin uploading 59 docs manually), and the RBI CEP call (you said "we're AI-first") all pointed to the same root issue: your team's AI adoption is lagging behind your sales narrative. You captured this as a credibility risk 4 days ago. Has anything changed?</div><div class="ic-action"><div class="ia-t">Review AI adoption plan →</div><div class="ia-a">›</div></div></div>
+  <div class="insight-card ic-pred" onclick="sendPrompt('What does my brain predict about my pipeline this week?')"><div class="ic-hdr"><div class="ic-iw">🔮</div><div class="ic-top"><div class="ic-type">Brain prediction</div><div class="ic-title">Mighty Auto Parts is your highest-probability close in the next 30 days</div></div></div><div class="ic-body">Largest quoted deal at $160K with no red flags captured. No person notes exist for this deal yet — that's a gap. If it goes cold, you won't know why.</div><div class="ic-action"><div class="ia-t">Add deal context →</div><div class="ia-a">›</div></div></div>
+  <div class="shd" style="margin-top:6px"><div class="stl">Business vs personal this week</div></div>
+  <div class="split-row"><div class="split-card"><div class="split-num" style="color:var(--or)">78%</div><div class="split-label">Business</div><div class="split-change" style="color:var(--or)">↑ Heavy</div><div class="split-bar-track"><div class="split-bar-fill" style="width:78%;background:var(--or)"></div></div></div><div class="split-card"><div class="split-num" style="color:var(--pu)">22%</div><div class="split-label">Personal</div><div class="split-change" style="color:var(--am)">↓ Low</div><div class="split-bar-track"><div class="split-bar-fill" style="width:22%;background:var(--pu)"></div></div></div></div>
+  <div class="shd"><div class="stl">Your hottest topics</div></div>
+  <div class="topic-heat"><div class="th-row"><div class="th-rank">1</div><div class="th-name">JaxBrain</div><div class="th-track"><div class="th-fill" style="width:100%"></div></div><div class="th-count">9</div><div class="th-badge top">Top</div></div><div class="th-row"><div class="th-rank">2</div><div class="th-name">Savant Software</div><div class="th-track"><div class="th-fill" style="width:78%"></div></div><div class="th-count">7</div><div class="th-badge top">Top</div></div><div class="th-row"><div class="th-rank">3</div><div class="th-name">Product Development</div><div class="th-track"><div class="th-fill" style="width:67%"></div></div><div class="th-count">6</div><div class="th-badge new">New</div></div><div class="th-row"><div class="th-rank">4</div><div class="th-name">AI Adoption</div><div class="th-track"><div class="th-fill" style="width:56%"></div></div><div class="th-count">5</div><div class="th-badge new">New</div></div><div class="th-row"><div class="th-rank">5</div><div class="th-name">RBI Corp</div><div class="th-track"><div class="th-fill" style="width:44%"></div></div><div class="th-count">4</div><div class="th-badge" style="background:var(--s3);color:var(--t3)">Steady</div></div></div>
+  <div class="shd" style="margin-top:6px"><div class="stl">Three things your brain recommends</div></div>
+  <div class="sug" onclick="sendPrompt('Help me add a person note for Mighty Auto Parts')"><div class="sug-icon">👤</div><div class="sug-text"><div class="sug-title">Add a contact for Mighty Auto Parts</div><div class="sug-sub">$160K deal with no person note — if it goes cold you won't know why</div></div><div class="sug-arr">›</div></div>
+  <div class="sug" onclick="sendPrompt('Help me capture a personal or emotional thought for this week')"><div class="sug-icon">🎭</div><div class="sug-text"><div class="sug-title">Save one personal thought today</div><div class="sug-sub">EQ is at 22% — one thought gets you moving toward balance</div></div><div class="sug-arr">›</div></div>
+  <div class="sug" onclick="sendPrompt('What is the status of AI adoption for Guillermo, Darren and James?')"><div class="sug-icon">🤖</div><div class="sug-text"><div class="sug-title">Check in on the AI adoption gap</div><div class="sug-sub">Flagged as credibility risk 4 days ago — still open</div></div><div class="sug-arr">›</div></div>
+  <div class="shd" style="margin-top:6px"><div class="stl">Focus for next week</div></div>
+  <div class="next-week"><div class="nw-label">💡 JaxBrain recommends</div><div class="nw-title">Close the loop on two things before Friday</div><div class="nw-body">The morning briefing is one Azure call away from being live. Contact Marcus Networking Monday. That's the highest ROI open item in your entire brain right now.</div></div>
+  <div class="dis-row"><div class="dis-btn secondary" onclick="toast('Reminder set for next Monday ✓')">Remind me next Monday</div><div class="dis-btn primary" onclick="sendPrompt('Based on my weekly brain insight, what should I prioritize first today?')">What should I do first? ↗</div></div>
+  <div class="pad"></div>
+</div>
+
+<!-- ═══ THOUGHT DETAIL ═══ -->
+<div class="scr" id="s-detail">
+  <div class="detail-topbar"><div class="back" onclick="go('home')">←</div><div class="dtb-info"><div class="dtb-lbl">Task · 2 days ago</div><div class="dtb-title">RBI Corp — CEP Discussion</div></div><div class="dtb-acts"><div class="dta" onclick="toast('Copied ✓')">⎘</div><div class="dta" onclick="toast('Pinned to primer ✓')">📌</div><div class="dta">⋯</div></div></div>
+  <div class="hero-card">
+    <div class="hero-accent" style="background:var(--or)"></div>
+    <div class="hero-body">
+      <div class="hero-badges"><span class="hero-badge hb-iq">Business (IQ)</span><span class="hero-badge hb-tier">Open · T1</span><span class="hero-badge hb-type">Task</span></div>
+      <div class="hero-text">Meeting Debrief — RBI Corp CEP Discussion, Fri Mar 20, 2026. Patrick and Will both receptive to the CEP pitch. Patrick confirmed broken/malperforming issues are knocked down but hasn't brought a performance initiatives list yet. CEP team introduced: Darren (Solutions Architect), Rolo (PM), Josefina (CSM), Ashwin (overnight support). Printer plug-and-play issue surfaced as undocumented pain point — SOP needed. Handheld UI sunset confirmed for 2027. Patrick building comprehensive test environment — aligns with CEP rollout. Average billable spend ~$2,400/mo — CEP pricing baseline.</div>
+      <div class="hero-meta"><div class="hm-left">Mar 20, 2026 · 11:00 AM</div><div class="hm-right"><div class="hm-tag">Client</div><div class="hm-tag">CEP</div><div class="hm-tag">RBI Corp</div></div></div>
+    </div>
+  </div>
+  <div class="shd"><div class="stl">Action items</div></div>
+  <div class="action-item"><div class="ai-check" onclick="toggleCheck(this)"></div><div class="ai-text"><div class="ai-title">Josefina to schedule CEP discovery session</div><div class="ai-who">Owner: Josefina Palacio</div></div><div class="ai-badge open">Open</div></div>
+  <div class="action-item"><div class="ai-check" onclick="toggleCheck(this)"></div><div class="ai-text"><div class="ai-title">Schedule Darren onsite visit at RBI</div><div class="ai-who">Owner: Josefina · Discovery first</div></div><div class="ai-badge open">Open</div></div>
+  <div class="action-item"><div class="ai-check done" onclick="toggleCheck(this)"></div><div class="ai-text"><div class="ai-title" style="text-decoration:line-through;color:var(--t3)">Deliver CEP presentation to Patrick + Will</div><div class="ai-who">Done Mar 20</div></div><div class="ai-badge done-b">Done</div></div>
+  <div class="action-item"><div class="ai-check" onclick="toggleCheck(this)"></div><div class="ai-text"><div class="ai-title">Create printer plug-and-play SOP</div><div class="ai-who">Owner: James Cawley</div></div><div class="ai-badge open">Open</div></div>
+  <div class="shd" style="margin-top:6px"><div class="stl">People in this thought</div></div>
+  <div class="ppl-linked">
+    <div class="pl-p"><div class="pl-av" style="background:#1e3a5f">PF</div><div class="pl-name">Patrick Ferguson</div><div class="pl-role">RBI · Champion</div></div>
+    <div class="pl-p"><div class="pl-av" style="background:#2a1a3a">JP</div><div class="pl-name">Josefina Palacio</div><div class="pl-role">CSM</div></div>
+    <div class="pl-p"><div class="pl-av" style="background:#1e3a5f">JC</div><div class="pl-name">James Cawley</div><div class="pl-role">Support</div></div>
+    <div class="pl-p"><div class="pl-av" style="background:#3a2a1a">DF</div><div class="pl-name">Darren Foland</div><div class="pl-role">Solutions Arch</div></div>
+  </div>
+  <div class="shd" style="margin-top:4px"><div class="stl">Related thoughts</div></div>
+  <div class="related-card" onclick="toast('Opening EQ thought...')"><div class="rc-accent" style="background:var(--pu)"></div><div class="rc-content"><div class="rc-title">RBI — Relationship Feel</div><div class="rc-body">Patrick cautiously engaged. Long memory of reactive support. Approach with extra preparation.</div><div class="rc-foot"><div class="rc-badge" style="background:rgba(124,58,237,.1);color:var(--pu)">Personal · T3</div><div class="rc-time">2d ago</div></div></div></div>
+  <div class="related-card" onclick="toast('Opening dev items...')"><div class="rc-accent" style="background:var(--bl)"></div><div class="rc-content"><div class="rc-title">RBI Corp — Open Dev Items</div><div class="rc-body">Blind Shipping HIGH. Packing Slip BO in progress. Blade Packing Screen pending redeploy.</div><div class="rc-foot"><div class="rc-badge" style="background:rgba(37,99,235,.1);color:var(--bl)">Reference · T1</div><div class="rc-time">2d ago</div></div></div></div>
+  <div class="related-card" onclick="toast('Opening support data...')"><div class="rc-accent" style="background:var(--or)"></div><div class="rc-content"><div class="rc-title">RBI Support — 6 Month Data</div><div class="rc-body">Monthly avg: 16.5 tickets, 9.87hrs, $2,407 revenue. CEP pricing baseline anchor.</div><div class="rc-foot"><div class="rc-badge" style="background:var(--ord);color:var(--or)">Business · T1</div><div class="rc-time">2d ago</div></div></div></div>
+  <div class="pad"></div>
+  <div class="bottom-bar">
+    <div class="bb-btn secondary" onclick="toast('Opening editor...')">Edit</div>
+    <div class="bb-btn primary" onclick="go('primer')">Use in primer ↗</div>
+    <div class="bb-btn danger" onclick="toast('Hold to delete')">🗑</div>
+  </div>
+</div>
+
+<!-- ═══ NOTIFICATIONS ═══ -->
+<div class="scr" id="s-notif">
+  <div class="notif-hdr"><div><div class="nh-t">Notifications</div><div class="nh-s">3 unread</div></div><div class="nh-clr" onclick="clearNotifs()">Clear all</div></div>
+  <div class="ng-lbl">Today</div>
+  <div class="ni unread" onclick="go('primer')"><div class="ni-iw" style="background:var(--ord)">📅</div><div class="ni-c"><div class="ni-t">RBI Corp check-in starts in 10 minutes</div><div class="ni-b">JaxBrain found 6 relevant thoughts — including a relationship flag you'll want to read first.</div><div class="ni-a">Open pre-call primer →</div><div class="ni-tm">8:50 AM</div></div><div class="ni-ud"></div></div>
+  <div class="ni unread" onclick="go('brain')"><div class="ni-iw" style="background:rgba(22,163,74,.1)">🏅</div><div class="ni-c"><div class="ni-t">Badge unlocked — First personal thought</div><div class="ni-b">You saved your first personal capture. Your brain is starting to know you, not just your work.</div><div class="ni-a">View your badges →</div><div class="ni-tm">7:42 AM</div></div><div class="ni-ud"></div></div>
+  <div class="ni unread" onclick="go('insight')"><div class="ni-iw" style="background:var(--ord)">💡</div><div class="ni-c"><div class="ni-t">Your weekly brain insight is ready</div><div class="ni-b">143 thoughts this week. 5 patterns found — including one you probably didn't notice.</div><div class="ni-a">Read the insight →</div><div class="ni-tm">7:00 AM</div></div><div class="ni-ud"></div></div>
+  <div class="ng-lbl">Yesterday</div>
+  <div class="ni" onclick="toast('Opening brain health...')"><div class="ni-iw" style="background:rgba(217,119,6,.1)">⚠️</div><div class="ni-c"><div class="ni-t">Your brain health dropped to 71</div><div class="ni-b">Haven't captured a personal thought in 2 days. Add one to get back on track.</div><div class="ni-a">Add a personal thought →</div><div class="ni-tm">6:00 PM</div></div></div>
+  <div class="ni"><div class="ni-iw" style="background:var(--ord)">🔥</div><div class="ni-c"><div class="ni-t">5-day streak — keep it going</div><div class="ni-b">You've captured something every day for 5 days. Save one thought today to reach 6.</div><div class="ni-tm">8:00 AM</div></div></div>
+  <div class="pref-sec"><div class="ps-t">Notification preferences</div>
+    <div class="pref-row" onclick="togT(this)"><div class="pr-i"><div class="pr-t">Pre-call primers</div><div class="pr-s">10 minutes before each meeting with context</div></div><div class="tog"><div class="tog-k"></div></div></div>
+    <div class="pref-row" onclick="togT(this)"><div class="pr-i"><div class="pr-t">Daily streak reminder</div><div class="pr-s">If you haven't captured anything by 8 PM</div></div><div class="tog"><div class="tog-k"></div></div></div>
+    <div class="pref-row" onclick="togT(this)"><div class="pr-i"><div class="pr-t">Weekly brain insight</div><div class="pr-s">Every Monday at 7:00 AM</div></div><div class="tog"><div class="tog-k"></div></div></div>
+    <div class="pref-row" onclick="togT(this)"><div class="pr-i"><div class="pr-t">Badge unlocks</div><div class="pr-s">When you earn a new achievement</div></div><div class="tog"><div class="tog-k"></div></div></div>
+    <div class="pref-row" onclick="togT(this)"><div class="pr-i"><div class="pr-t">Brain health alerts</div><div class="pr-s">When your score drops or balance skews</div></div><div class="tog"><div class="tog-k"></div></div></div>
+  </div>
+  <div class="pad"></div>
+</div>
+
+<!-- ═══ SETTINGS ═══ -->
+<div class="scr" id="s-settings">
+  <div class="settings-hdr"><div class="sh-t">Settings</div><div class="sh-s">JaxBrain v1.5 · Invite only</div></div>
+  <div class="profile-card"><div class="profile-av">CJ</div><div class="pinfo"><div class="pi-name">Chris Jackson</div><div class="pi-plan">⚡ Founder Access</div><div class="pi-stat">143 thoughts · 6-day streak · Brain health 74</div></div><div class="pi-edit">Edit</div></div>
+  <div class="hm"><div class="hm-row"><div class="hm-t">Brain Health</div><div class="hm-sc">74 / 100</div></div><div class="hmd"><div class="hmd-n">Last captured</div><div class="hmd-tr"><div class="hmd-f" style="width:95%;background:#16a34a"></div></div><div class="hmd-p" style="color:#16a34a">95</div></div><div class="hmd"><div class="hmd-n">Business vs personal</div><div class="hmd-tr"><div class="hmd-f" style="width:55%;background:#d97706"></div></div><div class="hmd-p" style="color:#d97706">55</div></div><div class="hmd"><div class="hmd-n">People noted</div><div class="hmd-tr"><div class="hmd-f" style="width:80%;background:#2563eb"></div></div><div class="hmd-p" style="color:#2563eb">80</div></div><div class="hmd"><div class="hmd-n">Privacy range used</div><div class="hmd-tr"><div class="hmd-f" style="width:65%;background:#7c3aed"></div></div><div class="hmd-p" style="color:#7c3aed">65</div></div><div class="hmd"><div class="hmd-n">Detail level</div><div class="hmd-tr"><div class="hmd-f" style="width:76%;background:#e85d04"></div></div><div class="hmd-p" style="color:#e85d04">76</div></div></div>
+  <div class="ss"><div class="ss-t">Connected accounts</div>
+    <div class="sr" onclick="toast('Opening Outlook settings...')"><div class="sr-l"><div class="sr-ic" style="background:rgba(37,99,235,.1)">📅</div><div class="sr-info"><div class="sr-t">Outlook Calendar</div><div class="sr-s">Morning briefing · Pre-call primers</div></div></div><div class="sr-r"><div class="srbadge p">Pending</div><div class="sr-a">›</div></div></div>
+    <div class="sr" onclick="toast('HubSpot coming soon')"><div class="sr-l"><div class="sr-ic" style="background:rgba(255,122,0,.1)">📊</div><div class="sr-info"><div class="sr-t">HubSpot</div><div class="sr-s">Pipeline · Deal snapshots</div></div></div><div class="sr-r"><div class="srbadge s">Soon</div><div class="sr-a">›</div></div></div>
+    <div class="sr" onclick="toast('Read.ai coming soon')"><div class="sr-l"><div class="sr-ic" style="background:rgba(124,58,237,.1)">🎙️</div><div class="sr-info"><div class="sr-t">Read.ai</div><div class="sr-s">Auto-capture from meeting transcripts</div></div></div><div class="sr-r"><div class="srbadge s">Soon</div><div class="sr-a">›</div></div></div>
+  </div>
+  <div class="ss"><div class="ss-t">Privacy & security</div>
+    <div class="sr" onclick="togRowT(this)"><div class="sr-l"><div class="sr-ic" style="background:rgba(22,163,74,.1)">🔒</div><div class="sr-info"><div class="sr-t">Face ID for Private & Sacred</div><div class="sr-s">Biometric required for T3 and T4 thoughts</div></div></div><div class="sr-r"><div class="tog" style="display:inline-block"><div class="tog-k"></div></div></div></div>
+    <div class="sr" onclick="toast('Exporting brain data...')"><div class="sr-l"><div class="sr-ic" style="background:rgba(37,99,235,.1)">📤</div><div class="sr-info"><div class="sr-t">Export my brain</div><div class="sr-s">Download all thoughts as JSON</div></div></div><div class="sr-r"><div class="sr-a">›</div></div></div>
+  </div>
+  <div class="ss"><div class="ss-t">Invite someone</div>
+    <div class="sr" onclick="toast('Invite link copied ✓')"><div class="sr-l"><div class="sr-ic" style="background:rgba(22,163,74,.1)">✉️</div><div class="sr-info"><div class="sr-t">Send an invite</div><div class="sr-s">JaxBrain is invite-only — you have 3 invites left</div></div></div><div class="sr-r"><div class="srbadge c">3 left</div><div class="sr-a">›</div></div></div>
+  </div>
+  <div class="ss"><div class="ss-t">Onboarding</div>
+    <div class="sr" onclick="startOnboard()"><div class="sr-l"><div class="sr-ic" style="background:var(--ord)">🚀</div><div class="sr-info"><div class="sr-t">View onboarding flow</div><div class="sr-s">Replay the intro experience</div></div></div><div class="sr-r"><div class="sr-a">›</div></div></div>
+  </div>
+  <div class="danger-row" onclick="toast('Hold to confirm deletion')"><div class="dr-t">Delete all thoughts</div><div class="dr-a">›</div></div>
+  <div class="danger-row" style="margin-top:4px" onclick="toast('Signing out...')"><div class="dr-t">Sign out</div><div class="dr-a">›</div></div>
+  <div class="ver">JaxBrain v1.5 · Invite only<br>Built by Chris Jackson & Claude · Made with 🧠 in Costa Rica</div>
+  <div class="pad"></div>
+</div>
+
+<!-- BIOMETRIC MODAL -->
+<div class="modal-ov" id="bioModal"><div class="modal"><div class="bio-icon">🔒</div><div class="modal-title">Private thought</div><div class="modal-sub">This is a Private or Sacred thought. Confirm with Face ID to save it securely.</div><button class="bio-btn" onclick="confirmBio()">Use Face ID to Save</button><button class="bio-cancel" onclick="document.getElementById('bioModal').classList.remove('open')">Cancel</button></div></div>
+
+<!-- BOTTOM NAV -->
+<div class="bnav" id="mainNav">
+  <div class="bni on" id="bn-home" onclick="go('home')"><div class="bni-ic">🏠</div><div class="bni-lb">Home</div></div>
+  <div class="bni" id="bn-cap" onclick="go('cap')"><div class="bni-ic">✏️</div><div class="bni-lb">Save</div></div>
+  <div class="bni" id="bn-srch" onclick="go('srch')"><div class="bni-ic">🔍</div><div class="bni-lb">Search</div></div>
+  <div class="bni" id="bn-ppl" onclick="go('ppl')"><div class="bni-ic">👥</div><div class="bni-lb">People</div></div>
+  <div class="bni" id="bn-brain" onclick="go('brain')"><div class="bni-ic">🧠</div><div class="bni-lb">Brain</div></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── SCREEN MAP ──
+const SCREENS={home:'s-home',cap:'s-cap',srch:'s-srch',ppl:'s-ppl',brain:'s-brain',onboard:'s-onboard',primer:'s-primer',insight:'s-insight',detail:'s-detail',notif:'s-notif',settings:'s-settings'};
+const BNAV_SCREENS=['home','cap','srch','ppl','brain'];
+const NO_CHROME=['onboard'];
+let currentTier=1,micActive=false,recognition=null,openDeb=null,gfiltActive='all',gsTerm='',selNode=null,activeCluster='rbi',pulse=0,gi=false;
+
+function go(name){
+  Object.values(SCREENS).forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('on')});
+  const target=document.getElementById(SCREENS[name]);
+  if(target)target.classList.add('on');
+  const chrome=document.getElementById('mainChrome');
+  const nav=document.getElementById('mainNav');
+  if(NO_CHROME.includes(name)){chrome.style.display='none';nav.style.display='none';}
+  else{chrome.style.display='';nav.style.display='';}
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  if(name==='home')document.querySelectorAll('.tab')[0].classList.add('on');
+  else if(name==='cap')document.querySelectorAll('.tab')[1].classList.add('on');
+  else if(name==='srch')document.querySelectorAll('.tab')[2].classList.add('on');
+  else if(name==='ppl')document.querySelectorAll('.tab')[3].classList.add('on');
+  else if(name==='brain')document.querySelectorAll('.tab')[4].classList.add('on');
+  Object.keys(SCREENS).forEach(k=>{const bn=document.getElementById('bn-'+k);if(bn){bn.classList.remove('on');const lb=bn.querySelector('.bni-lb');if(lb)lb.style.color='var(--t3)';}});
+  const activeBN=document.getElementById('bn-'+name);
+  if(activeBN){activeBN.classList.add('on');const lb=activeBN.querySelector('.bni-lb');if(lb)lb.style.color='var(--or)';}
+  if(name==='brain')initGraph();
+  if(name==='primer')startCountdown();
+  window.scrollTo(0,0);
+}
+
+// ── ONBOARDING ──
+let obStep=0;
+function startOnboard(){go('onboard');obStep=0;showStep(0);}
+function nextStep(n){showStep(n);}
+function showStep(n){
+  for(let i=0;i<5;i++){const el=document.getElementById('ob-'+i);if(el)el.style.display=i===n?'block':'none';}
+  for(let i=0;i<5;i++){const dot=document.getElementById('dot-'+i);if(dot){dot.classList.toggle('on',i===n);}}
+  obStep=n;
+  const dots=document.getElementById('stepDots');
+  if(n===0&&dots)dots.style.display='none';else if(dots)dots.style.display='flex';
+  window.scrollTo(0,0);
+}
+function finishOnboard(){go('home');}
+function grantPerm(id){
+  const card=document.getElementById('perm-'+id);
+  const status=document.getElementById('ps-'+id);
+  if(card)card.classList.add('granted');
+  if(status){status.textContent='✓ Granted';status.className='perm-status on';}
+  toast('Permission granted ✓');
+}
+function fillP(el){
+  const prompts={'Something I decided today':'I decided to ','A deal I\'m working on':'Active deal: ','Someone I met recently':'I met ','A goal for this week':'This week I want to ','How I\'m feeling right now':'Right now I\'m feeling '};
+  const input=document.getElementById('firstCap');
+  if(input)input.value=prompts[el.textContent]||'';
+  if(input)input.focus();
+}
+function saveFirst(){
+  const text=document.getElementById('firstCap').value.trim();
+  if(!text){toast('Type something first!');return;}
+  sendPrompt('Save this as my first JaxBrain thought: '+text);
+  finishOnboard();
+}
+
+// ── HOME ──
+function toggleMB(){
+  const list=document.getElementById('mblist');
+  const arr=document.getElementById('mbarr');
+  const open=list.classList.toggle('open');
+  arr.textContent=open?'▾':'›';
+}
+function toggleDB(id){
+  const card=document.getElementById('db-'+id);
+  const btn=document.getElementById('cb-'+id);
+  if(openDeb&&openDeb!==id){
+    const oc=document.getElementById('db-'+openDeb);const ob=document.getElementById('cb-'+openDeb);
+    if(oc)oc.classList.remove('open');
+    if(ob){ob.textContent='Context ✓';ob.classList.remove('flipped');}
+  }
+  const isOpen=card.classList.toggle('open');
+  btn.textContent=isOpen?'Debrief →':'Context ✓';
+  btn.classList.toggle('flipped',isOpen);
+  openDeb=isOpen?id:null;
+  if(isOpen&&card)card.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function closeDB(id){
+  const card=document.getElementById('db-'+id);const btn=document.getElementById('cb-'+id);
+  if(card)card.classList.remove('open');
+  if(btn){btn.textContent='Context ✓';btn.classList.remove('flipped');}
+  openDeb=null;
+}
+
+// ── CAPTURE ──
+function pp(el,grp){el.closest('.co').querySelectorAll('.cop').forEach(p=>p.classList.remove('on','oneq'));el.classList.add(grp==='dim'&&el.textContent==='Personal'?'oneq':'on')}
+function pickTier(n,el){currentTier=n;document.querySelectorAll('.tier-btn').forEach(b=>b.classList.remove('on'));el.classList.add('on');const lk=document.getElementById('tierLk');const mic=document.getElementById('micBtn');if(n>=3){lk.classList.add('show');if(mic){mic.style.opacity='.3';mic.style.pointerEvents='none';}}else{lk.classList.remove('show');if(mic){mic.style.opacity='1';mic.style.pointerEvents='auto';}}}
+function toggleTH(){document.getElementById('typeHelp').classList.toggle('show')}
+function togglePP(){document.getElementById('ppWrap').classList.toggle('open')}
+function tagP(el){document.querySelectorAll('.pp-p').forEach(p=>p.classList.remove('on'));el.classList.toggle('on')}
+function toggleMic(){
+  if(currentTier>=3)return;
+  if(micActive){stopMic();return;}
+  if('webkitSpeechRecognition' in window||'SpeechRecognition' in window){
+    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    recognition=new SR();recognition.continuous=false;recognition.interimResults=true;recognition.lang='en-US';
+    recognition.onstart=()=>{micActive=true;document.getElementById('micBtn').classList.add('rec');document.getElementById('micSt').textContent='🔴 Listening...'};
+    recognition.onresult=(e)=>{let t='';for(let i=e.resultIndex;i<e.results.length;i++)t+=e.results[i][0].transcript;document.getElementById('capTxt').value=t};
+    recognition.onend=()=>stopMic();recognition.onerror=()=>{stopMic();document.getElementById('micSt').textContent='Could not hear — try again';setTimeout(()=>{document.getElementById('micSt').textContent=''},2000)};
+    recognition.start();
+  } else {
+    micActive=true;document.getElementById('micBtn').classList.add('rec');document.getElementById('micSt').textContent='🔴 Listening...';
+    setTimeout(()=>{document.getElementById('capTxt').value='Patrick from RBI called. Frustrated about Blind Shipping delay — need to escalate to Diane before next check-in.';stopMic();},2000);
+  }
+}
+function stopMic(){micActive=false;if(recognition)try{recognition.stop()}catch(e){}document.getElementById('micBtn').classList.remove('rec');document.getElementById('micSt').textContent=''}
+function trySave(){if(currentTier>=3){document.getElementById('bioModal').classList.add('open');}else{doSave();}}
+function confirmBio(){document.getElementById('bioModal').classList.remove('open');doSave();}
+function doSave(){const t=document.getElementById('capTxt').value.trim();if(!t){toast('Type something first!');return;}sendPrompt('Save this thought to JaxBrain: '+t);}
+function sfp(el){document.querySelectorAll('.fp').forEach(p=>p.classList.remove('on'));el.classList.add('on')}
+
+// ── PRIMER COUNTDOWN ──
+let cSecs=240,cInterval=null;
+function startCountdown(){
+  if(cInterval)clearInterval(cInterval);
+  cSecs=240;
+  cInterval=setInterval(()=>{
+    cSecs=Math.max(0,cSecs-1);
+    const m=Math.floor(cSecs/60),s=cSecs%60;
+    const cd=document.getElementById('countdown');const cs=document.getElementById('countdown-sub');
+    if(cd)cd.textContent=m+':'+(s<10?'0':'')+s;
+    if(cs)cs.textContent=cSecs>0?'Starts in '+m+':'+(s<10?'0':'')+s:'Starting now!';
+    if(cSecs===0){clearInterval(cInterval);const cd2=document.getElementById('countdown');if(cd2){cd2.textContent='Now!';cd2.style.color=var_re;}}
+  },1000);
+}
+
+// ── THOUGHT DETAIL ──
+function toggleCheck(el){
+  el.classList.toggle('done');
+  const badge=el.closest('.action-item').querySelector('.ai-badge');
+  const title=el.closest('.action-item').querySelector('.ai-title');
+  if(el.classList.contains('done')){badge.textContent='Done';badge.className='ai-badge done-b';title.style.textDecoration='line-through';title.style.color='var(--t3)';toast('Marked complete ✓');}
+  else{badge.textContent='Open';badge.className='ai-badge open';title.style.textDecoration='none';title.style.color='var(--tx)';}
+}
+
+// ── NOTIFICATIONS ──
+function clearNotifs(){document.querySelectorAll('.ni-ud').forEach(d=>d.remove());document.querySelectorAll('.ni.unread').forEach(i=>i.classList.remove('unread'));toast('All cleared')}
+function togT(row){row.querySelector('.tog').classList.toggle('off')}
+function togRowT(row){row.querySelector('.tog').classList.toggle('off')}
+
+// ── GRAPH ──
+const NODES=[
+  {id:0,title:'RBI Corp — CEP Discussion',body:'Patrick and Will receptive.',cluster:'rbi',type:'iq',tier:'T1',tags:['CEP'],time:'2d ago',isNew:false},
+  {id:1,title:'RBI Relationship Feel',body:'Patrick cautiously engaged.',cluster:'rbi',type:'eq',tier:'T3',tags:['EQ'],time:'2d ago',isNew:false},
+  {id:2,title:'RBI Dev Items',body:'Blind Shipping HIGH. Packing Slip BO.',cluster:'rbi',type:'ref',tier:'T1',tags:['Dev'],time:'2d ago',isNew:false},
+  {id:3,title:'Patrick Ferguson',body:'RBI champion. Long memory.',cluster:'rbi',type:'people',tier:'T1',tags:['Person'],time:'2d ago',isNew:false},
+  {id:4,title:'RBI Support Data',body:'Avg: 16.5 tickets, $2,407/mo.',cluster:'rbi',type:'ref',tier:'T1',tags:['Data'],time:'2d ago',isNew:false},
+  {id:5,title:'Mighty Auto Parts',body:'Quoted. $160K.',cluster:'pipeline',type:'iq',tier:'T1',tags:['Pipeline'],time:'3d ago',isNew:false},
+  {id:6,title:'Pacific Northern',body:'Quoted. $90K.',cluster:'pipeline',type:'iq',tier:'T1',tags:['Pipeline'],time:'3d ago',isNew:false},
+  {id:7,title:'GMT CEP',body:'$60K+. Quote needed.',cluster:'pipeline',type:'iq',tier:'T1',tags:['CEP'],time:'3d ago',isNew:false},
+  {id:8,title:'Q1 2026 Wins',body:'$331K closed.',cluster:'pipeline',type:'ref',tier:'T1',tags:['Sales'],time:'3d ago',isNew:false},
+  {id:9,title:'Trilogy Labs',body:'Cosmetics. Strong fit.',cluster:'pipeline',type:'iq',tier:'T1',tags:['Prospect'],time:'3d ago',isNew:false},
+  {id:10,title:'JaxBrain Architecture',body:'Single DB, modular.',cluster:'jaxbrain',type:'ideas',tier:'T1',tags:['Arch'],time:'4d ago',isNew:false},
+  {id:11,title:'Four-Tier Privacy',body:'Open, Just Me, Private, Sacred.',cluster:'jaxbrain',type:'ref',tier:'T1',tags:['Privacy'],time:'Today',isNew:true},
+  {id:12,title:'IQ vs EQ Split',body:'Business facts vs personal context.',cluster:'jaxbrain',type:'ideas',tier:'T1',tags:['Arch'],time:'Today',isNew:true},
+  {id:13,title:'Capture Streak',body:'Daily habit. Loss aversion.',cluster:'jaxbrain',type:'ideas',tier:'T1',tags:['Gamification'],time:'Today',isNew:true},
+  {id:14,title:'Brain Health Score',body:'5 dimensions.',cluster:'jaxbrain',type:'ideas',tier:'T1',tags:['Gamification'],time:'Today',isNew:true},
+  {id:15,title:'Achievement Badges',body:'13 badges. T4 is rarest.',cluster:'jaxbrain',type:'ideas',tier:'T1',tags:['Gamification'],time:'Today',isNew:true},
+  {id:16,title:'Tech Spec v1.5',body:'Stack, schema, screens, docs.',cluster:'jaxbrain',type:'ref',tier:'T1',tags:['Docs'],time:'Today',isNew:true},
+  {id:17,title:'Diane Cawley',body:'Chief Architect.',cluster:'team',type:'people',tier:'T1',tags:['Team'],time:'2d ago',isNew:false},
+  {id:18,title:'James Cawley',body:'Support. SPOF risk.',cluster:'team',type:'people',tier:'T1',tags:['Team'],time:'2d ago',isNew:false},
+  {id:19,title:'Abby Wilbanks',body:'Biz Dev. Engaged to Chris Jr.',cluster:'team',type:'people',tier:'T1',tags:['Team'],time:'2d ago',isNew:false},
+  {id:20,title:'Darren Foland',body:'Solutions Architect.',cluster:'team',type:'people',tier:'T1',tags:['Team'],time:'2d ago',isNew:false},
+  {id:21,title:'Josefina Palacio',body:'CSM. Primary RBI contact.',cluster:'team',type:'people',tier:'T1',tags:['Team'],time:'2d ago',isNew:false},
+  {id:22,title:'Health Protocol',body:'Keto + IF. Testosterone.',cluster:'health',type:'iq',tier:'T2',tags:['Health'],time:'4d ago',isNew:false},
+  {id:23,title:'Jiu Jitsu + Tennis',body:'Daily practice.',cluster:'health',type:'iq',tier:'T2',tags:['Health'],time:'4d ago',isNew:false},
+  {id:24,title:'JANE Vision',body:'Paired brains. Phase 2/3.',cluster:'jane',type:'ideas',tier:'T2',tags:['Vision'],time:'4d ago',isNew:false},
+  {id:25,title:'Post-Savant Vision',body:'Business sherpa → life optimizer.',cluster:'jane',type:'ideas',tier:'T2',tags:['Vision'],time:'Today',isNew:true},
+  {id:26,title:'Morning Briefing',body:'Built. Blocked on Azure.',cluster:'jaxbrain',type:'iq',tier:'T1',tags:['Dev'],time:'2d ago',isNew:false},
+  {id:27,title:'Carter Handoff',body:'React+Vite. 10-step build.',cluster:'jaxbrain',type:'ref',tier:'T1',tags:['Dev'],time:'Today',isNew:true},
+  {id:28,title:'Gilmer Budget',body:'Schedule A fix needed.',cluster:'pipeline',type:'iq',tier:'T1',tags:['Client'],time:'3d ago',isNew:false},
+  {id:29,title:'AI Adoption Gap',body:'Credibility risk. Still open.',cluster:'jaxbrain',type:'ideas',tier:'T1',tags:['Insight'],time:'3d ago',isNew:false},
+  {id:30,title:'Invite-Only',body:'3 invites per user.',cluster:'jaxbrain',type:'iq',tier:'T1',tags:['Product'],time:'Today',isNew:true},
+  {id:31,title:'CEP Warning Signs',body:'5 patterns.',cluster:'rbi',type:'ref',tier:'T1',tags:['CEP'],time:'2d ago',isNew:false},
+  {id:32,title:'MTHFR/COMT',body:'Methylated vitamins.',cluster:'health',type:'ref',tier:'T2',tags:['Health'],time:'4d ago',isNew:false},
+  {id:33,title:'JANE Paired Brain',body:'Chris + Cady. Consent-based.',cluster:'jane',type:'ideas',tier:'T3',tags:['JANE'],time:'4d ago',isNew:false},
+  {id:34,title:'Architecture Doc v1.5',body:'System design, SQL, decisions.',cluster:'jaxbrain',type:'ref',tier:'T1',tags:['Docs'],time:'Today',isNew:true},
+];
+const CC={rbi:{x:.22,y:.3},pipeline:{x:.72,y:.26},jaxbrain:{x:.5,y:.6},health:{x:.14,y:.74},team:{x:.78,y:.7},jane:{x:.44,y:.86}};
+const TC={iq:'#e85d04',eq:'#7c3aed',ref:'#2563eb',people:'#16a34a',ideas:'#d97706'};
+const TL=['Mar 21 only','+ Mar 22','+ Mar 23','+ Mar 24','All 4 days'];
+let canvas,ctx,GW,GH,nodes=[],edges=[];
+
+function initGraph(){
+  if(gi)return;gi=true;
+  canvas=document.getElementById('gc');ctx=canvas.getContext('2d');
+  GW=canvas.offsetWidth;GH=200;canvas.width=GW;canvas.height=GH;
+  nodes=NODES.map(t=>{const cx=CC[t.cluster];const a=Math.random()*Math.PI*2;const d=.05+Math.random()*.1;return{...t,x:(cx.x+Math.cos(a)*d)*GW,y:(cx.y+Math.sin(a)*d)*GH,vx:(Math.random()-.5)*.14,vy:(Math.random()-.5)*.14,r:t.isNew?5.5:t.type==='people'?6:5,visible:true,hi:false};});
+  buildEdges();canvas.addEventListener('click',onTap);requestAnimationFrame(tick);
+}
+function buildEdges(){edges=[];nodes.forEach((n,i)=>nodes.forEach((m,j)=>{if(j<=i)return;if(n.cluster===m.cluster&&Math.random()>.4)edges.push([i,j]);else if(Math.random()>.92)edges.push([i,j]);}));}
+function visN(n){if(!n.visible)return false;if(gfiltActive==='all')return true;const m={iq:'iq',eq:'eq',ref:'ref',people:'people',ideas:'ideas'};return n.type===m[gfiltActive];}
+function tick(){
+  pulse+=.04;ctx.clearRect(0,0,GW,GH);
+  const vn=nodes.filter(visN);
+  const ct=document.getElementById('gcct');const gv=document.getElementById('gs-vis');
+  if(ct)ct.textContent=vn.length+' visible';if(gv)gv.textContent=vn.length;
+  Object.entries(CC).forEach(([nm,c])=>{ctx.font='9px Arial';ctx.fillStyle=nm===activeCluster?'rgba(232,93,4,0.5)':'rgba(255,255,255,0.1)';ctx.textAlign='center';ctx.fillText(nm.toUpperCase(),c.x*GW,c.y*GH-22);});
+  edges.forEach(([a,b])=>{const na=nodes[a],nb=nodes[b];if(!visN(na)||!visN(nb))return;const d=Math.hypot(na.x-nb.x,na.y-nb.y);if(d>120)return;const isHi=gsTerm&&(na.hi||nb.hi);ctx.beginPath();ctx.moveTo(na.x,na.y);ctx.lineTo(nb.x,nb.y);ctx.strokeStyle=isHi?`rgba(232,93,4,${.2+(1-d/120)*.2})`:`rgba(255,255,255,${.04+(1-d/120)*.05})`;ctx.lineWidth=isHi?1:.5;ctx.stroke();});
+  vn.forEach(n=>{
+    const isSel=selNode&&selNode.id===n.id;const isDim=gsTerm&&!n.hi;const al=isDim?.2:1;
+    if(n.isNew&&!isDim){const p=.5+.5*Math.sin(pulse*2);ctx.beginPath();ctx.arc(n.x,n.y,n.r+4+p*3,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,255,${p*.08})`;ctx.fill();}
+    if(isSel){ctx.beginPath();ctx.arc(n.x,n.y,n.r+5,0,Math.PI*2);ctx.strokeStyle='rgba(255,255,255,.9)';ctx.lineWidth=1.5;ctx.stroke();}
+    ctx.beginPath();ctx.arc(n.x,n.y,n.r+3,0,Math.PI*2);ctx.fillStyle=TC[n.type].replace('rgb','rgba').replace(')',`,${.12*al})`);ctx.fill();
+    ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fillStyle=TC[n.type];ctx.globalAlpha=.88*al;ctx.fill();ctx.globalAlpha=1;
+  });
+  vn.forEach(n=>{const cx=CC[n.cluster];n.vx+=(cx.x*GW-n.x)*.001;n.vy+=(cx.y*GH-n.y)*.001;vn.forEach(m=>{if(m.id===n.id)return;const dx=n.x-m.x,dy=n.y-m.y;const d=Math.hypot(dx,dy)||1;if(d<24){n.vx+=dx/d*.4;n.vy+=dy/d*.4;}});n.vx*=.92;n.vy*=.92;n.x+=n.vx;n.y+=n.vy;n.x=Math.max(12,Math.min(GW-12,n.x));n.y=Math.max(12,Math.min(GH-12,n.y));});
+  requestAnimationFrame(tick);
+}
+function onTap(e){const r=canvas.getBoundingClientRect();const sx=GW/r.width,sy=GH/r.height;const mx=(e.clientX-r.left)*sx,my=(e.clientY-r.top)*sy;let cl=null,md=22;nodes.filter(visN).forEach(n=>{const d=Math.hypot(n.x-mx,n.y-my);if(d<md){md=d;cl=n;}});if(cl){selNode=cl;showGNP(cl);document.getElementById('gs-sel').textContent=cl.type.toUpperCase();}else{selNode=null;closeGNP();document.getElementById('gs-sel').textContent='—';}}
+function showGNP(n){document.getElementById('gnp-t').textContent=n.title;document.getElementById('gnp-bd').textContent=n.body;document.getElementById('gnp-tm').textContent=n.time;document.getElementById('gnp-b').innerHTML=`<span class="bx bt">${n.tier}</span><span class="bx ${n.type==='eq'?'beq':'biq'}">${n.type.toUpperCase()}</span>${n.isNew?'<span class="bx" style="background:rgba(255,255,255,.1);color:#fff">NEW</span>':''}`;document.getElementById('gnp-tg').innerHTML=n.tags.map(t=>`<span class="gnp-tag">${t}</span>`).join('');const el=document.getElementById('gnp');el.classList.add('show');el.scrollIntoView({behavior:'smooth',block:'nearest'});}
+function closeGNP(){document.getElementById('gnp').classList.remove('show');selNode=null;document.getElementById('gs-sel').textContent='—';}
+function gfilt(f,el){gfiltActive=f;document.querySelectorAll('.gfp').forEach(p=>p.classList.remove('on'));el.classList.add('on');closeGNP();}
+function gsearch(v){gsTerm=v.toLowerCase().trim();nodes.forEach(n=>n.hi=gsTerm&&(n.title.toLowerCase().includes(gsTerm)||n.body.toLowerCase().includes(gsTerm)||n.cluster.includes(gsTerm)||n.tags.some(t=>t.toLowerCase().includes(gsTerm))));const hits=nodes.filter(n=>n.hi).length;const gs=document.getElementById('gs-sel');if(gs)gs.textContent=gsTerm&&hits>0?hits+' hits':'—';}
+function gcluster(nm,el){activeCluster=nm;document.querySelectorAll('.gclp').forEach(c=>c.classList.remove('on'));el.classList.add('on');nodes.forEach(n=>{if(n.cluster===nm){n.vx+=(Math.random()-.5)*2;n.vy+=(Math.random()-.5)*2;}});}
+function gscrub(v){const day=parseInt(v);const lbl=document.getElementById('gtlbl');if(lbl)lbl.textContent=TL[day];nodes.forEach(n=>{const di=n.time==='4d ago'?0:n.time==='3d ago'?1:n.time==='2d ago'?2:n.time==='Today'?3:1;n.visible=di<=day;});}
+
+// ── TOAST ──
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
+
+// var_re workaround
+const var_re='#dc2626';
+</script>
+</body>
+</html>
